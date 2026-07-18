@@ -16,6 +16,31 @@ SpecSpot is an intelligent, AI-powered mobile phone discovery and specification 
 - **User Feedback & Community**: Log in to share your feedback. The community's latest thoughts are highlighted directly on the homepage.
 - **Responsive Design**: Clean and modern UI that works across desktop and mobile devices.
 
+## 📂 Project Structure
+
+```text
+SpecSpot/
+├── .env.example           # Environment variables template
+├── .gitignore             # Git ignore file
+├── CONTRIBUTING.md        # Contribution guidelines
+├── LICENSE                # MIT License
+├── README.md              # Project documentation
+├── requirements.txt       # Python dependencies
+└── SpecSpot/              # Main Django Workspace
+    ├── manage.py          # Django entry point
+    ├── SpecSpot/          # Core Project Configuration
+    │   ├── settings.py    # Django settings (DB, Apps, Middleware)
+    │   └── urls.py        # Main URL routing
+    ├── myapp/             # Main Application Logic
+    │   ├── migrations/    # Database migrations
+    │   ├── templates/     # HTML Templates (home, login, glossary, etc.)
+    │   ├── models.py      # Database models (Phone, Feedback, GlossaryTerm)
+    │   ├── urls.py        # App-level URL routing
+    │   └── views.py       # Request handlers & Gemini API Integration
+    ├── media/             # User-uploaded content and dynamic images
+    └── static/            # Static assets (CSS, JS, Static Images)
+```
+
 ## 🛠️ Technology Stack
 
 - **Backend**: Python, Django
