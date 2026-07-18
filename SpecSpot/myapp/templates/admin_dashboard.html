@@ -1,0 +1,707 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - SpecSpot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    :root {
+      --ring: #6366f1;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f8fc;
+    }
+    .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .selected-item { background-color: #eef2ff; }
+    .tab-btn.active { border-bottom-color: #6366f1; color: #3730a3; }
+    .shadow-soft { box-shadow: 0 10px 30px rgba(2,6,23,.06), 0 2px 6px rgba(2,6,23,.05); }
+    .focus-ring:focus { outline: 2px solid var(--ring); outline-offset: 2px; }
+  </style>
+</head>
+<body class="p-4 sm:p-6 lg:p-8">
+  <main class="w-full max-w-7xl mx-auto bg-white rounded-3xl shadow-soft overflow-hidden">
+    
+    <header class="sticky top-0 z-40 bg-white/90 glass border-b border-slate-200">
+      <nav class="px-6 py-4 flex items-center justify-between">
+        <div class="justify-self-start">
+          <a
+            href="#"
+            class="text-6xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600"
+            >SpecSpot</a
+          >
+        </div>
+        <div class="relative">
+          <button id="profile-btn" class="p-1.5 rounded-xl hover:bg-slate-100 transition focus-ring" aria-haspopup="true" aria-expanded="false">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl grid place-items-center">
+              <span class="text-lg font-bold text-white">{{ user.username|first|upper }}</span>
+            </div>
+          </button>
+          <div id="profile-dropdown" class="absolute top-full mt-3 right-0 w-72 bg-white rounded-2xl shadow-2xl p-6 opacity-0 transform scale-95 pointer-events-none transition duration-200">
+            <div class="border-b border-slate-200 pb-4 mb-4">
+              <p class="text-xs uppercase tracking-wide text-slate-500">Logged in as</p>
+              <p class="text-lg font-bold text-slate-900 truncate">{{ user.username }}</p>
+            </div>
+            <a href="{% url 'logout' %}" class="flex items-center w-full p-3 rounded-xl text-red-600 hover:bg-red-50 font-medium">
+              <i data-feather="log-out" class="w-5 h-5 mr-3"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section class="px-6 md:px-8 py-10">
+      <div class="text-center">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Admin Dashboard</h1>
+        <p class="max-w-2xl mx-auto text-slate-600 mt-3">Review feedback, manage accounts, and curate phone listings.</p>
+      </div>
+
+      <div class="mt-8 max-w-6xl mx-auto">
+        <div class="border-b border-slate-200">
+          <nav class="-mb-px flex flex-wrap gap-6" role="tablist">
+            <button id="feedback-tab" role="tab" data-target="feedback-panel" class="tab-btn active group inline-flex items-center py-3 px-1 border-b-4 border-transparent text-base font-semibold text-slate-500 hover:text-indigo-700 hover:border-indigo-400 transition">
+              <i data-feather="inbox" class="w-5 h-5 mr-2"></i> User Feedback
+            </button>
+            <button id="users-tab" role="tab" data-target="users-panel" class="tab-btn group inline-flex items-center py-3 px-1 border-b-4 border-transparent text-base font-semibold text-slate-500 hover:text-indigo-700 hover:border-indigo-400 transition">
+              <i data-feather="users" class="w-5 h-5 mr-2"></i> User Management
+            </button>
+            <button id="phones-tab" role="tab" data-target="phones-panel" class="tab-btn group inline-flex items-center py-3 px-1 border-b-4 border-transparent text-base font-semibold text-slate-500 hover:text-indigo-700 hover:border-indigo-400 transition">
+              <i data-feather="smartphone" class="w-5 h-5 mr-2"></i> Phone Management
+            </button>
+            <button id="glossary-tab" role="tab" data-target="glossary-panel" class="tab-btn group inline-flex items-center py-3 px-1 border-b-4 border-transparent text-base font-semibold text-slate-500 hover:text-indigo-700 hover:border-indigo-400 transition">
+              <i data-feather="book-open" class="w-5 h-5 mr-2"></i> Glossary Management
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <div id="feedback-panel" role="tabpanel" class="mt-8">
+        <form action="{% url 'delete_feedback' %}" method="POST" onsubmit="return confirm('Delete selected feedback?');" class="max-w-5xl mx-auto">
+          {% csrf_token %}
+          <div class="bg-white rounded-2xl shadow-soft border border-slate-200">
+            <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+              <h3 class="text-xl font-bold text-slate-800">User Feedback</h3>
+              <div class="flex items-center gap-3">
+                <span id="feedback-count" class="text-sm font-medium text-slate-600 hidden">0 selected</span>
+                <select id="sort-select-feedback" class="bg-white border border-slate-300 text-sm rounded-xl px-3 py-2 focus-ring">
+                  <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Sort: Newest</option>
+                  <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Sort: Oldest</option>
+                  <option value="a-z" {% if current_sort == 'a-z' %}selected{% endif %}>Sort: A–Z</option>
+                </select>
+                <button type="submit" id="delete-feedback-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed">
+                  <i data-feather="trash-2" class="w-4 h-4 mr-2"></i>Delete
+                </button>
+              </div>
+            </div>
+            <ul class="divide-y divide-slate-200">
+              {% if feedback_items %}
+                <li class="p-4 px-6 bg-slate-50 flex items-center"><input type="checkbox" id="select-all-feedback-checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring"><label for="select-all-feedback-checkbox" class="ml-3 text-sm font-semibold text-slate-600">Select All</label></li>
+              {% endif %}
+              {% for item in feedback_items %}
+                <li class="group p-6 hover:bg-slate-50 transition flex items-start">
+                  <input type="checkbox" name="feedback_ids" value="{{ item.id }}" class="feedback-checkbox mt-1 h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring">
+                  <div class="ml-4 w-full">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                      <div class="flex items-center text-slate-800 font-semibold"><i data-feather="user" class="w-5 h-5 text-indigo-500 mr-2"></i>{{ item.user.username }}</div>
+                      <div class="flex items-center text-xs text-slate-500"><i data-feather="clock" class="w-4 h-4 mr-1"></i>{{ item.timestamp|date:"F j, Y, P" }}</div>
+                    </div>
+                    <p class="text-slate-700 leading-relaxed">{{ item.message }}</p>
+                  </div>
+                </li>
+              {% empty %}
+                <li class="p-16 text-center text-slate-500">...</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </form>
+      </div>
+
+      <div id="users-panel" role="tabpanel" class="hidden mt-8">
+        <form action="{% url 'delete_users' %}" method="POST" onsubmit="return confirm('PERMANENTLY delete selected users?');" class="max-w-5xl mx-auto">
+          {% csrf_token %}
+          <div class="bg-white rounded-2xl shadow-soft border border-slate-200">
+            <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+              <h3 class="text-xl font-bold text-slate-800">User Management</h3>
+              <div class="flex items-center gap-3">
+                <span id="user-count" class="text-sm font-medium text-slate-600 hidden">0 selected</span>
+                <select id="sort-select-users" class="bg-white border border-slate-300 text-sm rounded-xl px-3 py-2 focus-ring">
+                  <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Sort: Newest</option>
+                  <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Sort: Oldest</option>
+                  <option value="a-z" {% if current_sort == 'a-z' %}selected{% endif %}>Sort: A–Z</option>
+                </select>
+                <button type="submit" id="delete-user-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed">
+                  <i data-feather="user-x" class="w-4 h-4 mr-2"></i>Delete
+                </button>
+              </div>
+            </div>
+            <ul class="divide-y divide-slate-200">
+              {% if all_users %}
+                <li class="p-4 px-6 bg-slate-50 flex items-center"><input type="checkbox" id="select-all-users-checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring"><label for="select-all-users-checkbox" class="ml-3 text-sm font-semibold text-slate-600">Select All</label></li>
+              {% endif %}
+              {% for user_to_manage in all_users %}
+                <li class="group p-6 hover:bg-slate-50 transition flex items-start">
+                  <input type="checkbox" name="user_ids" value="{{ user_to_manage.id }}" class="user-checkbox mt-1 h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring">
+                  <div class="ml-4 w-full">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                      <div class="flex items-center text-slate-800 font-semibold"><i data-feather="user-check" class="w-5 h-5 text-indigo-500 mr-2"></i>{{ user_to_manage.username }}</div>
+                      <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+                        <div class="flex items-center"><i data-feather="mail" class="w-4 h-4 mr-2"></i>{{ user_to_manage.email }}</div>
+                        <div class="flex items-center"><i data-feather="calendar" class="w-4 h-4 mr-2"></i>Joined: {{ user_to_manage.date_joined|date:"F j, Y" }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              {% empty %}
+                <li class="p-16 text-center text-slate-500">...</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </form>
+      </div>
+
+      <div id="phones-panel" role="tabpanel" class="hidden mt-8">
+        <form action="{% url 'delete_phones' %}" method="POST" onsubmit="return confirm('PERMANENTLY delete selected phones?');" class="max-w-6xl mx-auto">
+          {% csrf_token %}
+          <div class="bg-white rounded-2xl shadow-soft border border-slate-200">
+            <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+              <h3 class="text-xl font-bold text-slate-800">Phone Management</h3>
+              <div class="flex flex-wrap items-center gap-3">
+                <span id="phone-count" class="text-sm font-medium text-slate-600 hidden">0 selected</span>
+                <select id="sort-select-phones" class="bg-white border border-slate-300 text-sm rounded-xl px-3 py-2 focus-ring">
+                  <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Sort: Newest</option>
+                  <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Sort: Oldest</option>
+                  <option value="a-z" {% if current_sort == 'a-z' %}selected{% endif %}>Sort: A–Z (Name)</option>
+                </select>
+                <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+                <button type="button" id="add-phone-modal-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700">
+                  <i data-feather="plus" class="w-4 h-4 mr-2"></i>Add Phone
+                </button>
+                <button type="submit" id="delete-phone-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed">
+                  <i data-feather="trash-2" class="w-4 h-4 mr-2"></i>Delete
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[820px] text-left">
+                <thead class="bg-slate-50/60">
+                  <tr>
+                    <th class="p-4 px-6 w-12"><input type="checkbox" id="select-all-phones-checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring"></th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Name</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Brand</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Price</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">RAM</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Camera</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Battery</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  {% for phone in all_phones %}
+                    <tr class="group hover:bg-slate-50 transition">
+                      <td class="p-4 px-6"><input type="checkbox" name="phone_ids" value="{{ phone.id }}" class="phone-checkbox h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring"></td>
+                      <td class="p-4 px-6 font-medium text-slate-800">{{ phone.name }}</td>
+                      <td class="p-4 px-6 text-slate-600">{{ phone.brand }}</td>
+                      <td class="p-4 px-6 text-slate-600">₹{{ phone.price }}</td>
+                      <td class="p-4 px-6 text-slate-600">{{ phone.ram }}GB</td>
+                      <td class="p-4 px-6 text-slate-600">{{ phone.camera }}MP</td>
+                      <td class="p-4 px-6 text-slate-600">{{ phone.battery }}mAh</td>
+                      <td class="p-4 px-6">
+                        <button type="button" class="edit-phone-btn font-medium text-indigo-600 hover:text-indigo-900 hover:underline"
+                          data-id="{{ phone.id }}"
+                          data-name="{{ phone.name }}"
+                          data-brand="{{ phone.brand }}"
+                          data-price="{{ phone.price }}"
+                          data-ram="{{ phone.ram }}"
+                          data-camera="{{ phone.camera }}"
+                          data-battery="{{ phone.battery }}"
+                          data-processor="{{ phone.processor }}"
+                          data-display_type="{{ phone.display_type }}"
+
+                          data-tagline="{{ phone.tagline }}"
+                          data-is_popular="{{ phone.is_popular }}"
+                          data-specs="{{ phone.specs|join:'\n' }}">
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="8" class="p-16 text-center text-slate-500">...</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div id="glossary-panel" role="tabpanel" class="hidden mt-8">
+        <form action="{% url 'delete_glossary' %}" method="POST" onsubmit="return confirm('PERMANENTLY delete selected glossary terms?');" class="max-w-6xl mx-auto">
+          {% csrf_token %}
+          <div class="bg-white rounded-2xl shadow-soft border border-slate-200">
+            <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+              <h3 class="text-xl font-bold text-slate-800">Glossary Management</h3>
+              <div class="flex flex-wrap items-center gap-3">
+                <span id="glossary-count" class="text-sm font-medium text-slate-600 hidden">0 selected</span>
+                <select id="sort-select-glossary" class="bg-white border border-slate-300 text-sm rounded-xl px-3 py-2 focus-ring">
+                  <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Sort: Newest</option>
+                  <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Sort: Oldest</option>
+                  <option value="a-z" {% if current_sort == 'a-z' %}selected{% endif %}>Sort: A–Z (Term)</option>
+                </select>
+                <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+                <button type="button" id="add-glossary-modal-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700">
+                  <i data-feather="plus" class="w-4 h-4 mr-2"></i>Add Term
+                </button>
+                <button type="submit" id="delete-glossary-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed">
+                  <i data-feather="trash-2" class="w-4 h-4 mr-2"></i>Delete
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[820px] text-left">
+                <thead class="bg-slate-50/60">
+                  <tr>
+                    <th class="p-4 px-6 w-12"><input type="checkbox" id="select-all-glossary-checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring"></th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Term</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Icon</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Definition (snippet)</th>
+                    <th class="p-4 px-6 text-sm font-semibold text-slate-600">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  {% for term in all_glossary_terms %}
+                    <tr class="group hover:bg-slate-50 transition">
+                      <td class="p-4 px-6"><input type="checkbox" name="glossary_ids" value="{{ term.id }}" class="glossary-checkbox h-5 w-5 rounded border-slate-300 text-indigo-600 focus-ring"></td>
+                      <td class="p-4 px-6 font-medium text-slate-800">{{ term.term }}</td>
+                      <td class="p-4 px-6 text-slate-600">{{ term.icon_name }}</td>
+                      <td class="p-4 px-6 text-slate-600 truncate max-w-sm">{{ term.definition }}</td>
+                      <td class="p-4 px-6">
+                        <button type="button" class="edit-glossary-btn font-medium text-indigo-600 hover:text-indigo-900 hover:underline"
+                          data-id="{{ term.id }}"
+                          data-term="{{ term.term }}"
+                          data-icon_name="{{ term.icon_name }}"
+                          data-definition="{{ term.definition }}"
+                          data-example="{{ term.example }}">
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="5" class="p-16 text-center text-slate-500">
+                        <div class="flex flex-col items-center">
+                          <i data-feather="book-open" class="w-12 h-12 text-slate-400 mb-3"></i>
+                          <h4 class="text-lg font-semibold text-slate-700">No Glossary Terms Found</h4>
+                          <p>Click "Add Term" to populate the database.</p>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </section>
+
+    <div id="phone-modal" class="fixed inset-0 z-50 bg-slate-900/40 glass hidden">
+      <div class="absolute inset-0" id="phone-modal-backdrop" aria-hidden="true"></div>
+      <div id="phone-modal-dialog" role="dialog" aria-modal="true" class="absolute right-0 top-0 h-full w-full max-w-xl bg-white shadow-2xl rounded-l-2xl transform translate-x-full opacity-0 transition duration-300 flex flex-col">
+        <form id="phone-form" method="POST" enctype="multipart/form-data" class="flex flex-col h-full">
+          {% csrf_token %}
+          <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+            <h2 id="phone-modal-title" class="text-xl font-bold text-slate-900">Add New Phone</h2>
+            <button type="button" id="phone-close-modal-btn" class="p-2 rounded-lg hover:bg-slate-100 focus-ring" aria-label="Close">
+              <i data-feather="x" class="w-6 h-6"></i>
+            </button>
+          </div>
+
+          <div class="p-5 space-y-5 overflow-y-auto grow">
+            <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100 space-y-4">
+              <div class="flex items-center gap-3">
+                  <input id="is_popular" name="is_popular" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600">
+                  <div>
+                      <label for="is_popular" class="font-medium text-slate-900">Mark as Popular</label>
+                      <p class="text-xs text-slate-500">Show on Homepage</p>
+                  </div>
+              </div>
+              <div>
+                  <label for="tagline" class="block text-sm font-medium text-slate-700">Tagline</label>
+                  <input type="text" id="tagline" name="tagline" class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" placeholder="e.g. The Ultimate Camera Phone" />
+              </div>
+              <div>
+                  <label for="image" class="block text-sm font-medium text-slate-700">Phone Image</label>
+                  <input type="file" id="image" name="image" accept="image/*" class="mt-1 w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"/>
+              </div>
+          </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="name" class="block text-sm font-medium text-slate-700">Phone Name</label>
+                <input type="text" id="name" name="name" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" />
+              </div>
+              <div>
+                <label for="brand" class="block text-sm font-medium text-slate-700">Brand</label>
+                <input type="text" id="brand" name="brand" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <label for="price" class="block text-sm font-medium text-slate-700">Price (₹)</label>
+                <div class="mt-1 relative">
+                  <span class="absolute left-3 top-2.5 text-slate-400">₹</span>
+                  <input type="number" id="price" name="price" required min="0" step="1" inputmode="numeric" class="w-full pl-7 pr-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" placeholder="69999" />
+                </div>
+              </div>
+              <div>
+                <label for="ram" class="block text-sm font-medium text-slate-700">RAM (GB)</label>
+                <input type="number" id="ram" name="ram" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" />
+              </div>
+              <div>
+                <label for="camera" class="block text-sm font-medium text-slate-700">Camera (MP)</label>
+                <input type="number" id="camera" name="camera" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" />
+              </div>
+              <div>
+                <label for="battery" class="block text-sm font-medium text-slate-700">Battery (mAh)</label>
+                <input type="number" id="battery" name="battery" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="processor" class="block text-sm font-medium text-slate-700">Processor</label>
+                <input type="text" id="processor" name="processor" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" />
+              </div>
+              <div>
+                <label for="display_type" class="block text-sm font-medium text-slate-700">Display Type</label>
+                <input type="text" id="display_type" name="display_type" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" />
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between">
+                <label for="specs" class="block text-sm font-medium text-slate-700">Key Specs</label>
+                <button type="button" id="add-spec-btn" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 focus-ring rounded-sm">Add</button>
+              </div>
+              <div id="specs-chips" class="mt-2 flex flex-wrap gap-2"></div>
+              <textarea id="specs" name="specs" rows="3" class="mt-2 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" placeholder="One per line"></textarea>
+            </div>
+          </div>
+
+          <div class="p-4 border-t border-slate-200 flex items-center justify-end gap-3">
+            <button type="button" id="reset-form-btn" class="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200">Reset</button>
+            <button type="button" id="phone-cancel-btn" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
+            <button type="submit" id="phone-modal-submit-btn" class="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-60">
+              <i data-feather="save" class="w-4 h-4 mr-2"></i>
+              <span>Add Phone</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="glossary-modal" class="fixed inset-0 z-50 bg-slate-900/40 glass hidden">
+      <div class="absolute inset-0" id="glossary-modal-backdrop" aria-hidden="true"></div>
+      <div id="glossary-modal-dialog" role="dialog" aria-modal="true" class="absolute right-0 top-0 h-full w-full max-w-xl bg-white shadow-2xl rounded-l-2xl transform translate-x-full opacity-0 transition duration-300 flex flex-col">
+        <form id="glossary-form" method="POST" class="flex flex-col h-full">
+          {% csrf_token %}
+          <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+            <h2 id="glossary-modal-title" class="text-xl font-bold text-slate-900">Add New Term</h2>
+            <button type="button" id="glossary-close-modal-btn" class="p-2 rounded-lg hover:bg-slate-100 focus-ring" aria-label="Close">
+              <i data-feather="x" class="w-6 h-6"></i>
+            </button>
+          </div>
+
+          <div class="p-5 space-y-5 overflow-y-auto grow">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="g-term" class="block text-sm font-medium text-slate-700">Term</label>
+                <input type="text" id="g-term" name="term" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" placeholder="e.g., Processor (CPU / SoC)" />
+              </div>
+              <div>
+                <label for="g-icon_name" class="block text-sm font-medium text-slate-700">Icon Name</label>
+                <input type="text" id="g-icon_name" name="icon_name" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" placeholder="e.g., cpu" />
+              </div>
+            </div>
+
+            <div>
+              <label for="g-definition" class="block text-sm font-medium text-slate-700">Definition</label>
+              <textarea id="g-definition" name="definition" rows="5" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" placeholder="The 'brain' of the phone..."></textarea>
+            </div>
+            
+            <div>
+              <label for="g-example" class="block text-sm font-medium text-slate-700">Example</label>
+              <textarea id="g-example" name="example" rows="4" required class="mt-1 w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus-ring" placeholder="The Snapdragon 8 Gen 3..."></textarea>
+            </div>
+          </div>
+
+          <div class="p-4 border-t border-slate-200 flex items-center justify-end gap-3">
+            <button type="button" id="glossary-cancel-btn" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
+            <button type="submit" id="glossary-modal-submit-btn" class="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-60">
+              <i data-feather="save" class="w-4 h-4 mr-2"></i>
+              <span>Add Term</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    feather.replace();
+
+    const qs = (s, sc=document) => sc.querySelector(s);
+    const qsa = (s, sc=document) => [...sc.querySelectorAll(s)];
+
+    // Profile Dropdown
+    (function () {
+      const btn = qs('#profile-btn');
+      const dd = qs('#profile-dropdown');
+      if (!btn || !dd) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dd.classList.toggle('opacity-0');
+        dd.classList.toggle('scale-95');
+        dd.classList.toggle('pointer-events-none');
+      });
+      document.addEventListener('click', (e) => {
+        if (!dd.contains(e.target) && !btn.contains(e.target)) {
+          dd.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+        }
+      });
+    })();
+
+    // Tabbed Navigation
+    (function () {
+      const tabs = qsa('[role="tab"]');
+      const panels = qsa('[role="tabpanel"]');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          panels.forEach(p => p.classList.add('hidden'));
+          tab.classList.add('active');
+          const target = qs('#' + tab.dataset.target);
+          if (target) target.classList.remove('hidden');
+          localStorage.setItem('adminActiveTab', tab.id);
+        });
+      });
+      document.addEventListener('DOMContentLoaded', () => {
+        const id = localStorage.getItem('adminActiveTab') || 'feedback-tab';
+        const t = qs('#' + id);
+        if (t) t.click();
+      });
+    })();
+
+    // Sort Dropdown Handler
+    function handleSortChange() {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('sort', this.value);
+      const activeTab = document.querySelector('.tab-btn.active');
+      if (activeTab) localStorage.setItem('adminActiveTab', activeTab.id);
+      window.location.href = currentUrl.toString();
+    }
+    ['#sort-select-feedback','#sort-select-users','#sort-select-phones', '#sort-select-glossary'].forEach(sel => {
+      const el = qs(sel); if (el) el.addEventListener('change', handleSortChange);
+    });
+
+    // Checkbox Selection & Delete Button Handler
+    function updateRowHighlight(checkbox, isTable) {
+      const row = checkbox.closest(isTable ? 'tr' : 'li');
+      if (!row) return;
+      row.classList.toggle('selected-item', checkbox.checked);
+    }
+    function bindSelection(scopeCls, boxCls, countId, deleteBtnId, isTable) {
+      const boxes = qsa(boxCls);
+      const countEl = qs(countId);
+      const delBtn = qs(deleteBtnId);
+      const selectAll = qs(scopeCls);
+      function refresh() {
+        const checked = boxes.filter(cb => cb.checked);
+        delBtn && (delBtn.disabled = checked.length === 0);
+        if (countEl) {
+          countEl.textContent = `${checked.length} selected`;
+          countEl.classList.toggle('hidden', checked.length === 0);
+        }
+      }
+      boxes.forEach(cb => cb.addEventListener('change', function(){ updateRowHighlight(this, isTable); refresh(); }));
+      if (selectAll) selectAll.addEventListener('change', function(){ boxes.forEach(cb => { cb.checked = this.checked; updateRowHighlight(cb, isTable); }); refresh(); });
+      refresh();
+    }
+    bindSelection('#select-all-feedback-checkbox', '.feedback-checkbox', '#feedback-count', '#delete-feedback-btn', false);
+    bindSelection('#select-all-users-checkbox', '.user-checkbox', '#user-count', '#delete-user-btn', false);
+    bindSelection('#select-all-phones-checkbox', '.phone-checkbox', '#phone-count', '#delete-phone-btn', true);
+    bindSelection('#select-all-glossary-checkbox', '.glossary-checkbox', '#glossary-count', '#delete-glossary-btn', true);
+
+
+    (function() {
+      const modal = qs('#phone-modal');
+      if (!modal) return;
+      const dialog = qs('#phone-modal-dialog');
+      const openBtn = qs('#add-phone-modal-btn');
+      const closeBtn = qs('#phone-close-modal-btn');
+      const cancelBtn = qs('#phone-cancel-btn');
+      const backdrop = qs('#phone-modal-backdrop');
+      const form = qs('#phone-form');
+      const modalTitle = qs('#phone-modal-title');
+      const submitBtn = qs('#phone-modal-submit-btn');
+      const submitText = submitBtn ? submitBtn.querySelector('span') : null;
+
+      const specsTA = qs('#specs', form);
+      const chipsWrap = qs('#specs-chips', form);
+
+      function trapFocus(e){
+        if (modal.classList.contains('hidden')) return;
+        const focusables = qsa('button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])', dialog);
+        const first = focusables[0], last = focusables[focusables.length - 1];
+        if (e.key === 'Tab') {
+          if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+          else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+        }
+        if (e.key === 'Escape') closeModal();
+      }
+      function openModal() {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => { dialog.classList.remove('translate-x-full','opacity-0'); }, 10);
+        document.addEventListener('keydown', trapFocus);
+        setTimeout(() => { qs('#name', form)?.focus(); }, 220);
+      }
+      function closeModal() {
+        dialog.classList.add('translate-x-full','opacity-0');
+        setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 280);
+        document.removeEventListener('keydown', trapFocus);
+        form && form.reset();
+      }
+
+      function renderChip(text){
+        const chip = document.createElement('span');
+        chip.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs';
+        chip.innerHTML = `${text}<button type="button" class="ml-1 text-slate-500 hover:text-slate-700" aria-label="Remove spec">×</button>`;
+        chip.querySelector('button').addEventListener('click', () => { chip.remove(); syncTextareaFromChips(); });
+        chipsWrap.appendChild(chip);
+      }
+      function syncTextareaFromChips(){
+        const texts = [...chipsWrap.childNodes].map(n => n.firstChild?.textContent || '').filter(Boolean);
+        specsTA.value = texts.join('\n');
+      }
+      function syncChipsFromTextarea(){
+        chipsWrap.innerHTML = '';
+        specsTA.value.split(/\n+/).map(s => s.trim()).filter(Boolean).forEach(renderChip);
+      }
+      
+      specsTA && specsTA.addEventListener('input', syncChipsFromTextarea);
+      openBtn && openBtn.addEventListener('click', () => {
+        form.reset();
+        form.action = "{% url 'add_phone' %}";
+        modalTitle.textContent = 'Add New Phone';
+        if (submitText) submitText.textContent = 'Add Phone';
+        openModal();
+        syncChipsFromTextarea();
+      });
+      closeBtn && closeBtn.addEventListener('click', closeModal);
+      cancelBtn && cancelBtn.addEventListener('click', closeModal);
+      backdrop && backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+
+      qsa('.edit-phone-btn').forEach(btn => btn.addEventListener('click', () => {
+        const d = btn.dataset;
+        qs('#name', form).value = d.name || '';
+        qs('#brand', form).value = d.brand || '';
+        qs('#price', form).value = d.price || '';
+        qs('#ram', form).value = d.ram || '';
+        qs('#camera', form).value = d.camera || '';
+        qs('#battery', form).value = d.battery || '';
+        qs('#processor', form).value = d.processor || '';
+        qs('#display_type', form).value = d.display_type || '';
+        
+        qs('#tagline').value = d.tagline || '';
+        qs('#is_popular').checked = (d.is_popular === 'True');
+        qs('#image').value = '';
+
+        const cleanedSpecs = (d.specs || '').trim().replace(/\\n/g, '\n');
+        qs('#specs', form).value = cleanedSpecs;
+
+        form.action = `/dashboard/phones/edit/${d.id}/`;
+        modalTitle.textContent = 'Edit Phone';
+        if (submitText) submitText.textContent = 'Save Changes';
+        openModal();
+        syncChipsFromTextarea();
+      }));
+    })();
+
+    (function() {
+      const modal = qs('#glossary-modal');
+      if (!modal) return;
+      const dialog = qs('#glossary-modal-dialog');
+      const openBtn = qs('#add-glossary-modal-btn');
+      const closeBtn = qs('#glossary-close-modal-btn');
+      const cancelBtn = qs('#glossary-cancel-btn');
+      const backdrop = qs('#glossary-modal-backdrop');
+      const form = qs('#glossary-form');
+      const modalTitle = qs('#glossary-modal-title');
+      const submitBtn = qs('#glossary-modal-submit-btn');
+      const submitText = submitBtn ? submitBtn.querySelector('span') : null;
+
+      function trapFocus(e){
+        if (modal.classList.contains('hidden')) return;
+        const focusables = qsa('button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])', dialog);
+        const first = focusables[0], last = focusables[focusables.length - 1];
+        if (e.key === 'Tab') {
+          if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+          else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+        }
+        if (e.key === 'Escape') closeModal();
+      }
+      function openModal() {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => { dialog.classList.remove('translate-x-full','opacity-0'); }, 10);
+        document.addEventListener('keydown', trapFocus);
+        setTimeout(() => { qs('#g-term', form)?.focus(); }, 220);
+      }
+      function closeModal() {
+        dialog.classList.add('translate-x-full','opacity-0');
+        setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 280);
+        document.removeEventListener('keydown', trapFocus);
+        form && form.reset();
+      }
+      
+      openBtn && openBtn.addEventListener('click', () => {
+        form.reset();
+        form.action = "{% url 'add_glossary' %}";
+        modalTitle.textContent = 'Add New Term';
+        if (submitText) submitText.textContent = 'Add Term';
+        openModal();
+      });
+      closeBtn && closeBtn.addEventListener('click', closeModal);
+      cancelBtn && cancelBtn.addEventListener('click', closeModal);
+      backdrop && backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+
+      qsa('.edit-glossary-btn').forEach(btn => btn.addEventListener('click', () => {
+        const d = btn.dataset;
+        qs('#g-term', form).value = d.term || '';
+        qs('#g-icon_name', form).value = d.icon_name || '';
+        qs('#g-definition', form).value = d.definition || '';
+        qs('#g-example', form).value = d.example || '';
+        
+        form.action = `/dashboard/glossary/edit/${d.id}/`;
+        modalTitle.textContent = 'Edit Term';
+        if (submitText) submitText.textContent = 'Save Changes';
+        openModal();
+      }));
+    })();
+  </script>
+</body>
+</html>

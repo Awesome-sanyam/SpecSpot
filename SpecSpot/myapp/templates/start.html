@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpecSpot - Your Ultimate Phone Guide</title>
+    <style>
+        /* FONT IMPORT */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        /* CSS RESET & DEFAULTS */
+        :root {
+            /* Enhanced SpecSpot - White Theme Color Palette */
+            --dark-bg: #F9FAFB;
+            --primary-glow-color: #22D3EE; /* Vibrant Cyan */
+            --secondary-color: #2563EB; /* Deep Blue */
+            --primary-glow: rgba(34, 211, 238, 0.45); 
+            --secondary-glow: rgba(37, 99, 235, 0.45);
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --card-bg: rgba(255, 255, 255, 0.6); /* Slightly more opaque for readability */
+            --border-color: rgba(229, 231, 235, 0.7); /* Lighter border */
+
+            /* Variables for JS interaction */
+            --glow-x: 50%;
+            --glow-y: 50%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- BACKGROUND EFFECTS --- */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+
+        .gradient-bg {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -2;
+            overflow: hidden;
+            filter: blur(150px); /* Increased blur for a softer effect */
+        }
+        
+        .gradient-bg .aurora {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .aurora-1 {
+            width: 700px;
+            height: 700px;
+            background-color: var(--primary-glow);
+            animation: moveAurora1 25s infinite alternate ease-in-out;
+        }
+
+        .aurora-2 {
+            width: 600px;
+            height: 600px;
+            background-color: var(--secondary-glow);
+            animation: moveAurora2 30s infinite alternate ease-in-out;
+        }
+
+        @keyframes moveAurora1 {
+            0% { transform: translate(5vw, 15vh) scale(1.1); }
+            100% { transform: translate(65vw, 75vh) scale(0.9); }
+        }
+
+        @keyframes moveAurora2 {
+            0% { transform: translate(75vw, 5vh) scale(0.9); }
+            100% { transform: translate(15vw, 65vh) scale(1.1); }
+        }
+
+        .spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 65%);
+            z-index: -1;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: background 0.2s ease;
+        }
+        
+        /* --- START PAGE STYLING --- */
+
+        .start-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s linear; /* Faster transition for more responsive tilt */
+            text-align: center;
+        }
+        
+        .start-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 4rem;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            width: 100%;
+            border-radius: 1.5rem; /* Slightly larger radius */
+            position: relative;
+            overflow: hidden; /* Important for the inner glow */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+
+        /* NEW: Interactive Glow Effect */
+        .start-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at var(--glow-x) var(--glow-y),
+                rgba(34, 211, 238, 0.15),
+                rgba(37, 99, 235, 0.15),
+                transparent 40%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .start-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* NEW: Entry Animations for elements */
+        @keyframes slideUpFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-name, .brand-subtitle, .get-started-button {
+            /* Apply animation with delays */
+            opacity: 0; /* Start hidden */
+            animation: slideUpFadeIn 0.6s ease-out forwards;
+        }
+
+        .brand-name {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: -3px;
+            background-image: linear-gradient(90deg, var(--primary-glow-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            line-height: 1;
+            animation-delay: 0.2s;
+        }
+
+        .brand-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            animation-delay: 0.4s;
+        }
+        
+        .get-started-button {
+            display: inline-block;
+            text-decoration: none;
+            width: 100%;
+            max-width: 250px;
+            background-image: linear-gradient(95deg, var(--primary-glow-color), var(--secondary-color));
+            background-size: 200% 100%; /* For hover animation */
+            background-position: 0% 50%; /* For hover animation */
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem; /* Larger radius */
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.3s ease, background-position 0.4s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+            animation-delay: 0.6s;
+        }
+
+        .get-started-button:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 8px 30px rgba(34, 211, 238, 0.4);
+            background-position: 100% 50%; /* Shift gradient on hover */
+        }
+        
+        /* Click feedback */
+        .get-started-button:active {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3);
+        }
+        
+        .get-started-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%; /* Start further off-screen */
+            width: 75%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transform: skewX(-25deg); /* Angled sheen */
+            transition: left 0.7s ease;
+        }
+
+        .get-started-button:hover::before {
+            left: 150%; /* Move further across */
+        }
+
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="gradient-bg">
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
+    </div>
+    <div class="spotlight"></div>
+    
+    <div class="start-container" id="start-container">
+        <div class="start-card" id="start-card">
+            <h1 class="brand-name">SpecSpot</h1>
+            <p class="brand-subtitle">Your Ultimate Phone Guide</p>
+            <a href="{% url 'register' %}" class="get-started-button">Get Started</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    
+    <script>
+        // --- PARTICLES.JS INITIALIZATION (More Subtle) ---
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, // Fewer particles
+                "color": { "value": "#6B7280" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 0.8, "opacity_min": 0.1, "sync": false } },
+                "size": { "value": 2, "random": true }, // Slightly smaller
+                "line_linked": { "enable": true, "distance": 150, "color": "#9CA3AF", "opacity": 0.3, "width": 1 },
+                "move": { "enable": true, "speed": 0.7, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false } // Slower speed
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }, "resize": true },
+                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.4 } } }
+            },
+            "retina_detect": true
+        });
+
+
+        // --- INTERACTIVE EFFECTS SCRIPT ---
+        const startContainer = document.getElementById('start-container');
+        const startCard = document.getElementById('start-card');
+        const spotlight = document.querySelector('.spotlight');
+
+        document.addEventListener('mousemove', (e) => {
+            const { clientX, clientY } = e;
+
+            // 1. Spotlight follows the cursor
+            spotlight.style.left = clientX + 'px';
+            spotlight.style.top = clientY + 'px';
+
+            // 2. 3D Tilt Effect on the container
+            const rect = startContainer.getBoundingClientRect();
+            const cardX = clientX - rect.left - rect.width / 2;
+            const cardY = clientY - rect.top - rect.height / 2;
+            const rotateX = (cardY / rect.height) * -8; // Slightly increased sensitivity
+            const rotateY = (cardX / rect.width) * 8;   // Slightly increased sensitivity
+            startContainer.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+            // 3. NEW: Interactive Glow Effect on the card
+            const cardRect = startCard.getBoundingClientRect();
+            const glowX = clientX - cardRect.left;
+            const glowY = clientY - cardRect.top;
+            startCard.style.setProperty('--glow-x', `${glowX}px`);
+            startCard.style.setProperty('--glow-y', `${glowY}px`);
+        });
+
+        document.body.addEventListener('mouseleave', () => {
+             // Reset 3D Tilt Effect when cursor leaves the page
+             startContainer.style.transform = 'perspective(1200px) rotateX(0) rotateY(0)';
+        });
+    </script>
+</body>
+</html>

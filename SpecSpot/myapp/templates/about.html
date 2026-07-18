@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About SpecSpot - Our Mission{% endblock %}
+
+{% block head_styles %}
+  <style>
+    .tech-gradient-1 { background-image: linear-gradient(to top right, #dbeafe, #e0e7ff); }
+    .tech-gradient-2 { background-image: linear-gradient(to top right, #c7d2fe, #ddd6fe); }
+    .tech-gradient-3 { background-image: linear-gradient(to top right, #fecaca, #fed7aa); }
+    .reveal-on-scroll { opacity: 0; transform: translateY(30px) scale(0.98); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal-from-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal-from-right { opacity: 0; transform: translateX(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal-on-scroll.is-visible,
+    .reveal-from-left.is-visible,
+    .reveal-from-right.is-visible { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .card-hover-effect:hover { box-shadow: 0 0 40px rgba(79, 70, 229, 0.15); }
+  </style>
+{% endblock %}
+
+
+{% block content %}
+  <section class="text-center px-6 pt-16 pb-20 md:pt-24 md:pb-28">
+    <div class="max-w-3xl mx-auto">
+      <p
+        class="text-sm font-semibold text-indigo-600 tracking-widest uppercase mb-4 reveal-on-scroll delay-1"
+      >
+        BEHIND THE SPECS
+      </p>
+      <h1
+        class="text-5xl md:text-7xl font-black text-slate-900 mb-6 reveal-on-scroll delay-2"
+        style="text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)"
+      >
+        About SpecSpot
+      </h1>
+      <p
+        class="max-w-2xl mx-auto text-slate-600 text-lg mb-12 reveal-on-scroll delay-3"
+      >
+        We believe choosing a new phone should be exciting, not exhausting.
+        SpecSpot was born from a passion for technology and a desire to
+        bring clarity to the complex world of mobile specs. Our mission is
+        to empower you to make confident, informed decisions.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 md:py-24 bg-slate-50/70">
+    <div class="px-4 sm:px-6 lg:px-8">
+      <div
+        class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+      >
+        <div class="text-center md:text-left reveal-from-left delay-1">
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-6"
+          >
+            <i data-feather="search" class="w-8 h-8 text-indigo-500"></i>
+          </div>
+          <h2 class="text-3xl font-bold text-slate-800 mb-3">
+            Lost in the Spec Sheet?
+          </h2>
+          <p class="text-slate-600">
+            The mobile market is a maze of confusing model numbers,
+            technical jargon, and biased reviews. It's tough to know which
+            features truly matter and which phone offers the best value for
+            your budget.
+          </p>
+        </div>
+        <div class="text-center md:text-left reveal-from-right delay-2">
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-6"
+          >
+            <i data-feather="compass" class="w-8 h-8 text-indigo-500"></i>
+          </div>
+          <h2 class="text-3xl font-bold text-slate-800 mb-3">
+            Your Guide to Clarity
+          </h2>
+          <p class="text-slate-600">
+            We cut through the noise. SpecSpot provides meticulously
+            detailed specifications, highlights unique features, and offers
+            powerful price filters. We turn complex data into a clear,
+            comparable, and simple choice.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 md:py-24">
+    <div class="px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal-on-scroll">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900">
+          What We Stand For
+        </h2>
+        <div class="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div
+          class="tech-gradient-1 p-8 rounded-3xl text-center shadow-lg card-hover-effect transform hover:-translate-y-2 transition-transform duration-300 reveal-on-scroll delay-1"
+          data-tilt
+        >
+          <i
+            data-feather="check-circle"
+            class="w-12 h-12 text-indigo-600 mx-auto mb-4"
+          ></i>
+          <h3 class="text-2xl font-bold text-slate-800 mb-2">
+            Unwavering Accuracy
+          </h3>
+          <p class="text-slate-600">
+            Our data is our promise. We are obsessed with providing timely,
+            accurate, and comprehensive specifications you can trust.
+          </p>
+        </div>
+        <div
+          class="tech-gradient-2 p-8 rounded-3xl text-center shadow-lg card-hover-effect transform hover:-translate-y-2 transition-transform duration-300 reveal-on-scroll delay-2"
+          data-tilt
+        >
+          <i
+            data-feather="users"
+            class="w-12 h-12 text-indigo-700 mx-auto mb-4"
+          ></i>
+          <h3 class="text-2xl font-bold text-slate-800 mb-2">
+            User-First Design
+          </h3>
+          <p class="text-slate-600">
+            Your experience is our priority. From budget filters to our AI
+            finder, every feature is designed to make your search simpler
+            and smarter.
+          </p>
+        </div>
+        <div
+          class="tech-gradient-3 p-8 rounded-3xl text-center shadow-lg card-hover-effect transform hover:-translate-y-2 transition-transform duration-300 reveal-on-scroll delay-3"
+          data-tilt
+        >
+          <i
+            data-feather="cpu"
+            class="w-12 h-12 text-red-700 mx-auto mb-4"
+          ></i>
+          <h3 class="text-2xl font-bold text-red-900 mb-2">
+            Passion for Technology
+          </h3>
+          <p class="text-slate-600">
+            We're tech enthusiasts at heart. We love exploring what makes
+            each device unique and sharing that passion with our community.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+
+{% block scripts %}
+  <script>
+    const scrollObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document
+      .querySelectorAll(
+        ".reveal-on-scroll, .reveal-from-left, .reveal-from-right"
+      )
+      .forEach((el) => {
+        scrollObserver.observe(el);
+      });
+
+    document.querySelectorAll("[data-tilt]").forEach((el) => {
+      el.addEventListener("mousemove", (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const { width, height } = rect;
+        const rotateX = (y / height - 0.5) * -10;
+        const rotateY = (x / width - 0.5) * 10;
+        el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+      });
+      el.addEventListener("mouseleave", () => {
+        el.style.transform =
+          "perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
+      });
+    });
+  </script>
+{% endblock %}

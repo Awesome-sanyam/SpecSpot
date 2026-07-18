@@ -1,0 +1,498 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{% block title %}SpecSpot{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f7f8fc;
+        background: linear-gradient(-45deg, #f3f4f6, #e0e7ff, #f3f4f6, #dbeafe);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        scroll-behavior: smooth;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .active-nav-link {
+        color: #ffffff;
+        font-weight: 600;
+        background-color: #475569; 
+      }
+      
+      #mobile-menu-pane {
+        transition: transform 0.3s ease-in-out;
+      }
+      #mobile-menu-pane.translate-x-full {
+         transform: translateX(100%);
+      }
+       #mobile-menu-pane.translate-x-0 {
+         transform: translateX(0);
+      }
+    </style>
+
+    {% block head_styles %}{% endblock %}
+  </head>
+  <body class="p-4 sm:p-6 lg:p-8">
+    <main
+      class="w-full max-w-7xl mx-auto bg-white/80 backdrop-blur-lg shadow-2xl shadow-slate-300/40 rounded-3xl overflow-hidden"
+    >
+      <header
+        class="sticky top-0 z-50 p-4 sm:p-6 bg-white/90 backdrop-blur-lg border-b border-slate-200/80"
+      >
+        <nav class="flex items-center justify-between gap-4">
+          <div class="flex-shrink-0">
+            <a
+              href="{% url 'home' %}"
+              class="text-3xl lg:text-4xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600"
+              >SpecSpot</a
+            >
+          </div>
+
+          <div
+            class="hidden md:flex items-center justify-center gap-2 bg-slate-900 p-1.5 rounded-full"
+          >
+            <a
+              href="{% url 'home' %}"
+              class="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 {% if request.path == '/' %}active-nav-link{% else %}text-slate-300 hover:text-white hover:bg-slate-700{% endif %}"
+              >Home</a
+            >
+            <a
+              href="{% url 'phones' %}"
+              class="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 {% if request.path == '/phones/' %}active-nav-link{% else %}text-slate-300 hover:text-white hover:bg-slate-700{% endif %}"
+              >Phones</a
+            >
+            <a
+              href="{% url 'brands' %}"
+              class="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 {% if request.path == '/brands/' %}active-nav-link{% else %}text-slate-300 hover:text-white hover:bg-slate-700{% endif %}"
+              >HotDeals</a
+            >
+            <a
+              href="{% url 'glossary' %}"
+              class="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 {% if request.path == '/glossary/' %}active-nav-link{% else %}text-slate-300 hover:text-white hover:bg-slate-700{% endif %}"
+              >Glossary</a
+            >
+          </div>
+
+          <div class="flex items-center gap-2 justify-end">
+            <div class="relative">
+              <button
+                id="profile-btn"
+                class="p-1.5 rounded-full hover:bg-slate-100 transition-colors group"
+                aria-label="Open profile menu"
+              >
+                <div
+                  class="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-full flex items-center justify-center ring-2 ring-white shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300"
+                >
+                  {% if user.is_authenticated %}
+                  <span class="text-lg font-bold text-white"
+                    >{{ user.username|first|upper }}</span
+                  >
+                  {% else %}
+                  <i data-feather="user" class="w-5 h-5 text-white"></i>
+                  {% endif %}
+                </div>
+              </button>
+              <div
+                id="profile-dropdown"
+                class="absolute top-full mt-3 right-0 w-72 bg-white rounded-2xl shadow-2xl p-4 opacity-0 transform scale-95 pointer-events-none transition-all duration-200 ease-out z-10"
+              >
+                {% if user.is_authenticated %}
+                <div class="border-b border-slate-200 pb-3 mb-3">
+                  <p class="text-sm text-slate-500">Logged in as</p>
+                  <p class="text-lg font-bold text-slate-900 truncate">
+                    {{ user.username }}
+                  </p>
+                </div>
+                <div class="flex flex-col">
+                  {% if user.is_staff %}
+                  <a
+                    href="{% url 'admin_dashboard' %}"
+                    class="flex items-center w-full text-left p-3 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors font-medium group"
+                  >
+                    <i
+                      data-feather="settings"
+                      class="w-5 h-5 mr-3 text-slate-500 group-hover:text-indigo-600"
+                    ></i>
+                    <span>Admin Dashboard</span>
+                  </a>
+                  {% endif %}
+                  <p class="text-sm text-slate-500 mb-1">Account</p>
+                  <div
+                    class="flex items-center justify-between bg-slate-100 p-2 rounded-lg"
+                  >
+                    <p class="text-base text-slate-700">Standard User</p>
+                    <i data-feather="shield" class="w-5 h-5 text-slate-400"></i>
+                  </div>
+                  <a
+                    href="{% url 'about' %}"
+                    class="flex items-center w-full text-left p-3 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors font-medium group"
+                  >
+                    <i
+                      data-feather="info"
+                      class="w-5 h-5 mr-3 text-slate-500 group-hover:text-indigo-600"
+                    ></i>
+                    <span>About Us</span>
+                  </a>
+                  <a
+                    href="{% url 'terms' %}"
+                    class="flex items-center w-full text-left p-3 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors font-medium group"
+                  >
+                    <i
+                      data-feather="file-text"
+                      class="w-5 h-5 mr-3 text-slate-500 group-hover:text-indigo-600"
+                    ></i>
+                    <span>Terms & Condition</span>
+                  </a>
+                  <a
+                    href="#"
+                    id="feedback-link"
+                    class="flex items-center w-full text-left p-3 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors font-medium group"
+                  >
+                    <i
+                      data-feather="message-square"
+                      class="w-5 h-5 mr-3 text-slate-500 group-hover:text-indigo-600"
+                    ></i>
+                    <span>Give Feedback</span>
+                  </a>
+                  <div class="border-t border-slate-200 mt-2 pt-2">
+                    <a
+                      href="{% url 'logout' %}"
+                      class="flex items-center w-full text-left p-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors font-medium group"
+                    >
+                      <i data-feather="log-out" class="w-5 h-5 mr-3 group-hover:text-red-600"></i>
+                      <span>Logout</span>
+                    </a>
+                  </div>
+                </div>
+                {% else %}
+                <div class="p-4 text-center">
+                  <p class="text-slate-600 mb-4">Welcome, Guest!</p>
+                  <a
+                    href="{% url 'login' %}"
+                    class="w-full inline-flex items-center justify-center bg-blue-600 text-white font-semibold rounded-full px-5 py-3 text-base hover:bg-blue-500 transition-colors"
+                  >
+                    Log In
+                  </a>
+                  <p class="text-xs text-slate-500 mt-3">
+                    <a href="{% url 'register' %}" class="underline hover:text-blue-600">Create an account</a> to give feedback.
+                  </p>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-slate-100" aria-label="Open main menu">
+              <i data-feather="menu" class="w-6 h-6 text-slate-800"></i>
+            </button>
+
+          </div>
+        </nav>
+      </header>
+
+      {% block content %}
+      {% endblock %}
+
+      <footer
+        class="bg-slate-900 text-slate-300 p-8 text-center border-t border-slate-700"
+      >
+        <p>&copy; {% now "Y" %} SpecSpot. All Rights Reserved.</p>
+        <p class="text-sm text-slate-500 mt-2">
+          Your Ultimate Guide to Mobile Technology.
+        </p>
+      </footer>
+    </main>
+
+    <div id="mobile-menu-overlay" class="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm hidden" aria-hidden="true"></div>
+    <div id="mobile-menu-pane" class="fixed top-0 right-0 z-[70] h-full w-full max-w-sm bg-white shadow-2xl p-6 translate-x-full">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold text-slate-800">Menu</h2>
+            <button id="mobile-menu-close-btn" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Close menu">
+                <i data-feather="x" class="w-6 h-6 text-slate-700"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col gap-2">
+            <a href="{% url 'home' %}" class="block px-4 py-3 text-lg font-medium rounded-lg {% if request.path == '/' %}text-indigo-600 bg-indigo-50{% else %}text-slate-700 hover:bg-slate-50{% endif %}">Home</a>
+            <a href="{% url 'phones' %}" class="block px-4 py-3 text-lg font-medium rounded-lg {% if request.path == '/phones/' %}text-indigo-600 bg-indigo-50{% else %}text-slate-700 hover:bg-slate-50{% endif %}">Phones</a>
+            <a href="{% url 'brands' %}" class="block px-4 py-3 text-lg font-medium rounded-lg {% if request.path == '/brands/' %}text-indigo-600 bg-indigo-50{% else %}text-slate-700 hover:bg-slate-50{% endif %}">HotDeals</a>
+            <a href="{% url 'glossary' %}" class="block px-4 py-3 text-lg font-medium rounded-lg {% if request.path == '/glossary/' %}text-indigo-600 bg-indigo-50{% else %}text-slate-700 hover:bg-slate-50{% endif %}">Glossary</a>
+            
+            <div class="border-t border-slate-200 mt-4 pt-4">
+              {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="block px-4 py-3 text-lg font-medium rounded-lg text-red-600 hover:bg-red-50">Logout</a>
+              {% else %}
+                <a href="{% url 'login' %}" class="block px-4 py-3 text-lg font-medium rounded-lg text-blue-600 hover:bg-blue-50">Login</a>
+                <a href="{% url 'register' %}" class="block px-4 py-3 text-lg font-medium rounded-lg text-slate-700 hover:bg-slate-50">Register</a>
+              {% endif %}
+            </div>
+        </nav>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div
+      id="feedback-modal"
+      class="fixed inset-0 flex items-center justify-center z-[100] bg-slate-900/50 backdrop-blur-sm hidden p-4"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full max-w-md mx-auto relative transform transition-all opacity-0 translate-y-4"
+        id="feedback-dialog"
+      >
+        <button
+          id="close-feedback-modal"
+          class="absolute top-4 right-4 p-2 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors"
+          aria-label="Close feedback modal"
+        >
+          <i data-feather="x" class="w-6 h-6"></i>
+        </button>
+
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-slate-800">
+            Submit Your Feedback
+          </h2>
+          <p class="text-slate-500 mt-1">We'd love to hear your thoughts!</p>
+        </div>
+
+        <div>
+          <textarea
+            id="feedback-textarea"
+            rows="5"
+            class="w-full p-3 text-base text-slate-700 bg-slate-50 rounded-lg border-2 border-slate-200 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition resize-none"
+            placeholder="Tell us how we can improve..."
+          ></textarea>
+
+          <div
+            id="feedback-message-container"
+            class="mt-3 text-sm font-medium h-5"
+          ></div>
+
+          <button
+            id="submit-feedback-btn"
+            class="mt-3 w-full inline-flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold rounded-full px-5 py-3 text-base hover:bg-indigo-500 transition-colors transform hover:scale-105 disabled:opacity-70 disabled:hover:scale-100"
+          >
+            <span id="feedback-btn-text">Submit Feedback</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <script>
+      feather.replace();
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      const csrftoken = getCookie("csrftoken");
+
+      const profileBtn = document.getElementById("profile-btn");
+      const profileDropdown = document.getElementById("profile-dropdown");
+
+      if (profileBtn && profileDropdown) {
+        profileBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          profileDropdown.classList.toggle("opacity-0");
+          profileDropdown.classList.toggle("scale-95");
+          profileDropdown.classList.toggle("pointer-events-none");
+        });
+        document.addEventListener("click", (e) => {
+          if (
+            !profileDropdown.contains(e.target) &&
+            !profileBtn.contains(e.target)
+          ) {
+            profileDropdown.classList.add(
+              "opacity-0",
+              "scale-95",
+              "pointer-events-none"
+            );
+          }
+        });
+      }
+
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenuCloseBtn = document.getElementById("mobile-menu-close-btn");
+      const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
+      const mobileMenuPane = document.getElementById("mobile-menu-pane");
+
+      const openMobileMenu = () => {
+        if (!mobileMenuOverlay || !mobileMenuPane) return;
+        mobileMenuOverlay.classList.remove("hidden");
+        mobileMenuPane.classList.remove("translate-x-full");
+        mobileMenuPane.classList.add("translate-x-0");
+      };
+
+      const closeMobileMenu = () => {
+         if (!mobileMenuOverlay || !mobileMenuPane) return;
+        mobileMenuOverlay.classList.add("hidden");
+        mobileMenuPane.classList.add("translate-x-full");
+        mobileMenuPane.classList.remove("translate-x-0");
+      };
+
+      if (mobileMenuBtn) mobileMenuBtn.addEventListener("click", openMobileMenu);
+      if (mobileMenuCloseBtn) mobileMenuCloseBtn.addEventListener("click", closeMobileMenu);
+      if (mobileMenuOverlay) mobileMenuOverlay.addEventListener("click", closeMobileMenu);
+
+
+      const feedbackModal = document.getElementById("feedback-modal");
+      const feedbackDialog = document.getElementById("feedback-dialog");
+      const closeFeedbackModalBtn = document.getElementById(
+        "close-feedback-modal"
+      );
+      const submitFeedbackBtn = document.getElementById("submit-feedback-btn");
+      const feedbackTextarea = document.getElementById("feedback-textarea");
+      const feedbackMessageContainer = document.getElementById(
+        "feedback-message-container"
+      );
+      const modalFeedbackBtnText = document.querySelector(
+        "#submit-feedback-btn span"
+      );
+
+      const feedbackTriggers = document.querySelectorAll(
+        "#feedback-link, #footer-feedback-link"
+      );
+
+      if (
+        feedbackModal &&
+        feedbackDialog &&
+        closeFeedbackModalBtn &&
+        submitFeedbackBtn
+      ) {
+        const openFeedbackModal = () => {
+          {% if user.is_authenticated %}
+            feedbackModal.classList.remove("hidden");
+            setTimeout(() => {
+              feedbackDialog.classList.remove("opacity-0", "translate-y-4");
+            }, 10);
+          {% else %}
+            window.location.href = "{% url 'login' %}?next=" + window.location.pathname + "#feedback";
+          {% endif %}
+        };
+
+        const closeFeedbackModal = () => {
+          feedbackDialog.classList.add("opacity-0", "translate-y-4");
+          setTimeout(() => {
+            feedbackModal.classList.add("hidden");
+            if (feedbackTextarea) feedbackTextarea.value = "";
+            if (feedbackMessageContainer) feedbackMessageContainer.innerHTML = "";
+            if (modalFeedbackBtnText)
+              modalFeedbackBtnText.textContent = "Submit Feedback";
+            if (submitFeedbackBtn) submitFeedbackBtn.disabled = false;
+          }, 300);
+        };
+
+        const submitFeedback = async () => {
+          const message = feedbackTextarea.value.trim();
+          if (!message) {
+            feedbackMessageContainer.textContent = "Please enter a message.";
+            feedbackMessageContainer.className =
+              "mt-3 text-sm font-medium h-5 text-red-600";
+            return;
+          }
+
+          if (modalFeedbackBtnText)
+            modalFeedbackBtnText.textContent = "Submitting...";
+          submitFeedbackBtn.disabled = true;
+          feedbackMessageContainer.innerHTML = "";
+
+          try {
+            const response = await fetch("{% url 'submit_feedback' %}", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+              },
+              body: JSON.stringify({ message: message }),
+            });
+
+            if (response.redirected) {
+              window.location.href = response.url;
+              return;
+            }
+
+            const result = await response.json();
+
+            if (response.ok) {
+              feedbackMessageContainer.textContent =
+                result.message || "Feedback submitted successfully!";
+              feedbackMessageContainer.className =
+                "mt-3 text-sm font-medium h-5 text-green-600";
+              setTimeout(closeFeedbackModal, 2000);
+            } else {
+              throw new Error(result.error || "Something went wrong.");
+            }
+          } catch (error) {
+            feedbackMessageContainer.textContent = error.message;
+            feedbackMessageContainer.className =
+              "mt-3 text-sm font-medium h-5 text-red-600";
+            if (modalFeedbackBtnText)
+              modalFeedbackBtnText.textContent = "Submit Feedback";
+            submitFeedbackBtn.disabled = false;
+          }
+        };
+
+        feedbackTriggers.forEach(trigger => {
+            if (trigger) {
+                trigger.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    openFeedbackModal();
+                });
+            }
+        });
+
+        if (closeFeedbackModalBtn) closeFeedbackModalBtn.addEventListener("click", closeFeedbackModal);
+        if (submitFeedbackBtn) submitFeedbackBtn.addEventListener("click", submitFeedback);
+        
+        feedbackModal.addEventListener("click", (e) => {
+          if (e.target === feedbackModal) closeFeedbackModal();
+        });
+        
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !feedbackModal.classList.contains("hidden"))
+            closeFeedbackModal();
+        });
+        
+        if (window.location.hash === "#feedback") {
+            openFeedbackModal();
+        }
+      }
+    </script>
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

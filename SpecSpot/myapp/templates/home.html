@@ -1,0 +1,896 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SpecSpot - Your Ultimate Phone Guide{% endblock %}
+
+{% block head_styles %}
+<style>
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-15px);
+    }
+
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  .tech-gradient-1 {
+    background-image: linear-gradient(to top right, #e0f2fe, #dbeafe);
+  }
+
+  .tech-gradient-2 {
+    background-image: linear-gradient(to top right, #c7d2fe, #e0e7ff);
+  }
+
+  .tech-gradient-3 {
+    background-image: linear-gradient(to top right, #fecaca, #fed7aa);
+  }
+
+  .tech-gradient-4 {
+    background-image: linear-gradient(to top right, #e5e7eb, #d1d5db);
+  }
+
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .delay-1 {
+    transition-delay: 0.1s;
+  }
+
+  .delay-2 {
+    transition-delay: 0.2s;
+  }
+
+  .delay-3 {
+    transition-delay: 0.3s;
+  }
+
+  .delay-4 {
+    transition-delay: 0.4s;
+  }
+
+  .card-hover-effect:hover {
+    box-shadow: 0 10px 50px -10px rgba(59, 130, 246, 0.25);
+  }
+
+  #drawer-menu,
+  #profile-dropdown {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  .interactive-btn {
+    transition: transform 0.1s ease-out, box-shadow 0.2s ease-out;
+  }
+
+  .interactive-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .interactive-btn:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .spec-icon-group i {
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+  }
+
+  .results-window {
+    height: 600px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 1.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0f2fe' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .results-window::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .results-window::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  .results-window::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  .results-window::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  .prose {
+    color: #334155;
+  }
+
+  .prose p {
+    margin-bottom: 1rem;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose li {
+    margin-bottom: 0.25rem;
+  }
+
+  .prose strong {
+    font-weight: 600;
+  }
+
+  .prose a {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+
+  .prose code {
+    background-color: #e2e8f0;
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    border-radius: 6px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .prose pre {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .prose pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  @keyframes item-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .animate-item-in {
+    animation: item-in 0.5s ease-out forwards;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="text-center px-6 pt-20 pb-24 md:pt-28 md:pb-32">
+  <div class="max-w-3xl mx-auto">
+    <p class="text-sm font-semibold text-blue-600 tracking-widest uppercase mb-4 reveal-on-scroll delay-1">
+      Detailed Specs, Clear Choices
+    </p>
+    <h1 class="text-5xl md:text-7xl font-black text-slate-900 mb-6 reveal-on-scroll delay-2"
+      style="text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)">
+      Find Your Perfect Phone
+    </h1>
+    <p class="max-w-2xl mx-auto text-slate-600 text-lg mb-12 reveal-on-scroll delay-3">
+      We provide detailed specifications, highlight unique features, and
+      help you find the best phone for your budget and needs.
+    </p>
+  </div>
+
+  <div class="max-w-2xl mx-auto reveal-on-scroll delay-4">
+    <div class="relative mb-4">
+      <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+        <i data-feather="search" class="text-slate-400 h-5 w-5"></i>
+      </div>
+      <input type="search" id="spec-search-input" placeholder="Search for a phone (e.g., Pixel 10 Pro)"
+        class="w-full py-4 pl-14 pr-32 sm:pr-40 text-lg text-slate-800 bg-white/80 border border-slate-200 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 focus:shadow-lg focus:shadow-blue-500/20" />
+      <button id="spec-search-btn"
+        class="absolute inset-y-0 right-0 my-2 mr-2 flex items-center justify-center bg-blue-600 text-white font-semibold rounded-full px-4 sm:px-5 py-2 text-sm hover:bg-blue-500 transition-colors interactive-btn w-12 h-12 sm:h-auto sm:w-auto">
+        <span class="hidden sm:inline">Find Specs</span>
+        <i data-feather="search" class="w-5 h-5 sm:hidden"></i>
+        <i data-feather="arrow-right" class="w-5 h-5 ml-1.5 hidden sm:inline-block"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="px-6 sm:px-8 lg:px-10 pb-24">
+  <div class="text-center mb-16 mt-8 reveal-on-scroll">
+    <h2
+      class="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+      Most Popular Phones
+    </h2>
+    <div class="w-24 h-1 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+    {% for phone in popular_phones %}
+    <article
+      class="{% cycle 'tech-gradient-1' 'tech-gradient-2' 'tech-gradient-3' 'tech-gradient-4' %} p-8 rounded-3xl transform hover:scale-[1.02] transition-transform duration-300 ease-in-out shadow-lg card-hover-effect reveal-on-scroll delay-{{ forloop.counter }}"
+      data-tilt>
+      <div class="flex flex-col h-full">
+        <div class="flex-grow">
+          <h2 class="text-4xl font-bold text-slate-800 mb-2">
+            {{ phone.name }}
+          </h2>
+          <p class="text-slate-600 max-w-sm mb-6">
+            {{ phone.tagline|default:"Top rated device" }}
+          </p>
+          <div class="space-y-3 text-slate-700">
+            {% for spec in phone.specs|slice:":4" %}
+            <span class="flex items-center text-sm group transition-all duration-300">
+              <i data-feather="{% cycle 'maximize' 'camera' 'cpu' 'battery-charging' %}"
+                class="mr-3 h-5 w-5 text-blue-500 transition-transform duration-300 group-hover:scale-110"></i>
+              <span class="transition-transform duration-300 group-hover:translate-x-1">{{ spec }}</span>
+            </span>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="h-80 mt-8 flex justify-center items-center">
+            {% if phone.image %}
+              <img src="{{ phone.image.url }}" alt="{{ phone.name }}"
+                class="max-h-full object-contain animate-float"
+                onerror="this.onerror=null;this.src='https://placehold.co/400x400/dbeafe/312e81?text={{ phone.name }}';" />
+            {% else %}
+               <img src="https://placehold.co/400x400/dbeafe/312e81?text={{ phone.name }}" 
+                   alt="{{ phone.name }}" class="max-h-full object-contain animate-float"/>
+            {% endif %}
+        </div>
+      </div>
+    </article>
+    {% empty %}
+    <div class="col-span-2 text-center py-10">
+        <p class="text-slate-500">No popular phones selected in Admin Dashboard.</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="py-24 md:py-32 bg-slate-50/70">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div id="ai-section-header" class="text-center mb-16 reveal-on-scroll">
+      <h2
+        class="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+        Meet Your AI Assistant
+      </h2>
+      <div class="w-24 h-1 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+      <p id="ai-section-tagline" class="max-w-2xl mx-auto text-slate-600 text-lg mt-6">
+        Choose a tool to get started. Let Gemini power your search for the
+        perfect phone or answer your tech questions.
+      </p>
+    </div>
+
+    <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl shadow-slate-300/30 p-8 reveal-on-scroll delay-1">
+      <div id="ai-mode-selection" class="grid md:grid-cols-2 gap-8 animate-item-in">
+        <div id="select-mode-finder"
+          class="bg-blue-50 p-8 rounded-2xl border-2 border-transparent hover:border-blue-500 hover:bg-white transition-all cursor-pointer group hover:shadow-xl hover:-translate-y-1">
+          <div class="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="text-blue-600">
+              <path
+                d="M12 3L12 3L12 3C13.6569 3 15 4.34315 15 6L15 6L15 6C15 7.65685 13.6569 9 12 9L12 9L12 9C10.3431 9 9 7.65685 9 6L9 6L9 6C9 4.34315 10.3431 3 12 3zM21 12L21 12L21 12C21 13.6569 19.6569 15 18 15L18 15L18 15C16.3431 15 15 13.6569 15 12L15 12L15 12C15 10.3431 16.3431 9 18 9L18 9L18 9C19.6569 9 21 10.3431 21 12zM6 15L6 15L6 15C7.65685 15 9 16.3431 9 18L9 18L9 18C9 19.6569 7.65685 21 6 21L6 21L6 21C4.34315 21 3 19.6569 3 18L3 18L3 18C3 16.3431 4.34315 15 6 15z" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-800 mt-4">
+            AI Phone Finder
+          </h3>
+          <p class="text-slate-600 mt-2">
+            Describe your ideal phone, and I'll find the best matches for
+            you.
+          </p>
+        </div>
+        <div id="select-mode-chat"
+          class="bg-slate-50 p-8 rounded-2xl border-2 border-transparent hover:border-blue-500 hover:bg-white transition-all cursor-pointer group hover:shadow-xl hover:-translate-y-1">
+          <div class="w-16 h-16 rounded-full bg-slate-200 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="text-slate-600">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-800 mt-4">
+            Conversational Tech AI
+          </h3>
+          <p class="text-slate-600 mt-2">
+            Ask me anything about technology, from processors to display
+            types.
+          </p>
+        </div>
+      </div>
+
+      <div id="ai-interaction-wrapper" class="hidden">
+        <div class="flex justify-between items-center mb-6">
+          <h3 id="ai-mode-title" class="text-2xl font-bold text-slate-800"></h3>
+          <button id="ai-back-btn"
+            class="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">
+            <i data-feather="arrow-left" class="w-4 h-4"></i>
+            Change Mode
+          </button>
+        </div>
+        <div id="ai-result-container" class="results-window p-6"></div>
+        <div class="relative mt-6">
+          <textarea id="ai-prompt" rows="1"
+            class="w-full p-5 pr-48 text-lg text-slate-800 bg-slate-50 rounded-2xl border-2 border-slate-200 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all duration-200 resize-none focus:shadow-lg focus:shadow-blue-500/20 overflow-y-hidden"
+            placeholder="e.g., Find me a phone under ₹30,000..." style="min-height: 80px"></textarea>
+          <button id="ai-submit-btn"
+            class="absolute bottom-5 right-5 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold rounded-full px-6 py-4 text-base hover:bg-blue-500 transition-colors transform hover:scale-105 active:scale-100 interactive-btn shadow-lg">
+            <svg id="ai-btn-icon-finder" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-sparkles">
+              <path
+                d="M12 3L12 3L12 3C13.6569 3 15 4.34315 15 6L15 6L15 6C15 7.65685 13.6569 9 12 9L12 9L12 9C10.3431 9 9 7.65685 9 6L9 6L9 6C9 4.34315 10.3431 3 12 3zM21 12L21 12L21 12C21 13.6569 19.6569 15 18 15L18 15L18 15C16.3431 15 15 13.6569 15 12L15 12L15 12C15 10.3431 16.3431 9 18 9L18 9L18 9C19.6569 9 21 10.3431 21 12zM6 15L6 15L6 15C7.65685 15 9 16.3431 9 18L9 18L9 18C9 19.6569 7.65685 21 6 21L6 21L6 21C4.34315 21 3 19.6569 3 18L3 18L3 18C3 16.3431 4.34315 15 6 15z" />
+            </svg>
+            <svg id="ai-btn-icon-chat" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-send hidden">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span id="ai-btn-text">Ask Gemini</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-24 md:py-32 bg-slate-50/70">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 mt-8 reveal-on-scroll">
+      <div class="flex justify-center items-center gap-4">
+        <h2
+          class="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+          Latest Tech News
+        </h2>
+        <button id="refresh-news-btn"
+          class="p-3 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all transform hover:rotate-90 interactive-btn">
+          <i data-feather="refresh-cw" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="w-24 h-1 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+    </div>
+    <div id="tech-news-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 min-h-[400px] relative">
+      <div id="news-loading-spinner" class="absolute inset-0 flex flex-col justify-center items-center col-span-3">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <p class="mt-4 text-slate-500">Fetching latest news...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-24 md:py-32">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 mt-8 reveal-on-scroll">
+      <h2
+        class="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+        What Our Feedback Says
+      </h2>
+      <div class="w-24 h-1 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      {% for item in feedback_items %}
+      <div
+        class="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300 reveal-on-scroll hover:shadow-xl hover:border-blue-200 border-2 border-transparent"
+        data-tilt>
+        <div
+          class="w-24 h-24 rounded-full mb-4 ring-4 ring-blue-100 shadow-lg bg-blue-100 text-blue-700 flex items-center justify-center text-3xl font-bold">
+          {{ item.user_initials }}
+        </div>
+        <p class="text-slate-600 text-sm mb-4 italic">
+          "{{ item.message }}"
+        </p>
+        <h3 class="font-bold text-slate-800">{{ item.user.username }}</h3>
+      </div>
+      {% empty %}
+      <p class="text-slate-500 text-center col-span-3">
+        No reader feedback available yet.
+      </p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-900 relative overflow-hidden">
+  <div class="absolute inset-0" style="
+        background-image: url('data:image/svg+xml,%3Csvg width=" 60 " height=" 60" viewBox="0 0 60 60"
+    xmlns="http://www.w3.org/2000/svg" %3E%3Cg fill="none" fill-rule="evenodd" %3E%3Cg fill="%23475569"
+    fill-opacity="0.1" %3E%3Cpath
+    d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"
+    /%3E%3C/g%3E%3C/g%3E%3C/svg%3E'); background-position: center; "
+    ></div>
+
+    <div class=" relative px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
+    <h2 class="text-4xl md:text-5xl font-extrabold text-white">
+      Ready to Find Your Next Phone?
+    </h2>
+    <p class="max-w-xl mx-auto text-slate-300 mt-4 mb-8">
+      Join millions of users who trust SpecSpot for clear, unbiased mobile
+      phone information. Start your search today.
+    </p>
+    <a href="{% url 'phones' %}"
+      class="inline-block bg-blue-600 text-white font-semibold rounded-full px-8 py-4 text-lg hover:bg-blue-500 transition-colors transform hover:scale-105 interactive-btn">
+      Browse All Phones
+    </a>
+  </div>
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const scrollObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll(".reveal-on-scroll").forEach((el) => {
+    scrollObserver.observe(el);
+  });
+
+  function applyTiltEffect(elements) {
+    elements.forEach((el) => {
+      if (el._tiltAttached) return;
+      const handleMouseMove = (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const { width, height } = rect;
+        const rotateX = (y / height - 0.5) * -10;
+        const rotateY = (x / width - 0.5) * 10;
+        el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      };
+      const handleMouseLeave = () => {
+        el.style.transform = "perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
+      };
+      el.addEventListener("mousemove", handleMouseMove);
+      el.addEventListener("mouseleave", handleMouseLeave);
+      el._tiltAttached = true;
+    });
+  }
+  applyTiltEffect(document.querySelectorAll("[data-tilt]"));
+  const specSearchInput = document.getElementById("spec-search-input");
+  const specSearchBtn = document.getElementById("spec-search-btn");
+  if (specSearchInput && specSearchBtn) {
+    const performSpecSearch = () => {
+      const phoneName = specSearchInput.value.trim();
+      if (phoneName) {
+        window.location.href = `/specs/${encodeURIComponent(phoneName)}/`;
+      } else {
+        specSearchInput.focus();
+      }
+    };
+    specSearchBtn.addEventListener("click", performSpecSearch);
+    specSearchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        performSpecSearch();
+      }
+    });
+  }
+
+  const aiModeSelection = document.getElementById('ai-mode-selection');
+  const selectModeFinderBtn = document.getElementById('select-mode-finder');
+  const selectModeChatBtn = document.getElementById('select-mode-chat');
+  const aiInteractionWrapper = document.getElementById('ai-interaction-wrapper');
+  const aiModeTitle = document.getElementById('ai-mode-title');
+  const aiBackBtn = document.getElementById('ai-back-btn');
+  const aiSubmitBtn = document.getElementById("ai-submit-btn");
+  const aiPromptTextarea = document.getElementById("ai-prompt");
+  const aiResultContainer = document.getElementById("ai-result-container");
+  const aiBtnText = document.getElementById("ai-btn-text");
+  const finderIcon = document.getElementById('ai-btn-icon-finder');
+  const chatIcon = document.getElementById('ai-btn-icon-chat');
+
+  let currentAiMode = '';
+  let chatHistory = [];
+  if (aiModeSelection && aiInteractionWrapper) {
+    aiPromptTextarea.addEventListener('input', () => {
+      const maxHeight = 200;
+      aiPromptTextarea.style.height = 'auto';
+      let newHeight = aiPromptTextarea.scrollHeight;
+      if (newHeight > maxHeight) {
+        aiPromptTextarea.style.height = `${maxHeight}px`;
+        aiPromptTextarea.style.overflowY = 'auto';
+      } else {
+        aiPromptTextarea.style.height = `${newHeight}px`;
+        aiPromptTextarea.style.overflowY = 'hidden';
+      }
+    });
+
+    const setAiMode = (mode) => {
+      currentAiMode = mode;
+      chatHistory = [];
+      aiPromptTextarea.value = "";
+      aiResultContainer.innerHTML = '';
+      aiModeSelection.classList.add('hidden');
+      aiInteractionWrapper.classList.remove('hidden');
+      aiInteractionWrapper.classList.add('animate-item-in');
+      if (mode === 'finder') {
+        aiModeTitle.textContent = 'AI Phone Finder';
+        aiPromptTextarea.placeholder = "e.g., Find me a phone under ₹30,000 with a great camera...";
+        aiBtnText.textContent = 'Ask Gemini';
+        finderIcon.classList.remove('hidden');
+        chatIcon.classList.add('hidden');
+        const placeholder = document.createElement('p');
+        placeholder.className = "text-center text-slate-500 h-full flex items-center justify-center";
+        placeholder.textContent = 'Your AI-powered recommendations will appear here.';
+        aiResultContainer.appendChild(placeholder);
+      } else {
+        aiModeTitle.textContent = 'Conversational Tech AI';
+        aiPromptTextarea.placeholder = "Ask me anything about technology...";
+        aiBtnText.textContent = 'Send';
+        finderIcon.classList.add('hidden');
+        chatIcon.classList.remove('hidden');
+        initializeTechChat();
+      }
+      feather.replace();
+    };
+
+    const resetToModeSelection = () => {
+      currentAiMode = '';
+      aiInteractionWrapper.classList.add('hidden');
+      aiModeSelection.classList.remove('hidden');
+      aiModeSelection.classList.add('animate-item-in');
+    }
+
+    selectModeFinderBtn.addEventListener('click', () => setAiMode('finder'));
+    selectModeChatBtn.addEventListener('click', () => setAiMode('chat'));
+    aiBackBtn.addEventListener('click', resetToModeSelection);
+
+    const initializeTechChat = () => {
+      chatHistory = [];
+      const welcomeMessage = {
+        role: 'ai',
+        content: `Hello! I'm your friendly tech assistant. How can I help you today? You can ask me things like:`,
+        suggestions: [
+          "What is the latest Snapdragon processor?",
+          "Explain OLED vs AMOLED displays.",
+          "What should I look for in a gaming phone?"
+        ]
+      };
+      chatHistory.push(welcomeMessage);
+      renderChatHistory();
+    };
+
+    const handleEnterKey = (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        aiSubmitBtn.click();
+      }
+    }
+    aiPromptTextarea.addEventListener('keydown', handleEnterKey);
+
+    aiSubmitBtn.addEventListener("click", () => {
+      const prompt = aiPromptTextarea.value.trim();
+      if (!prompt) {
+        aiPromptTextarea.focus();
+        return;
+      }
+      if (currentAiMode === 'finder') {
+        handlePhoneFinder(prompt);
+      } else {
+        handleTechChat(prompt);
+      }
+    });
+
+    const handlePhoneFinder = async (prompt) => {
+      aiBtnText.textContent = "Thinking...";
+      aiSubmitBtn.disabled = true;
+      aiResultContainer.innerHTML = `<div class="flex justify-center items-center h-full"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="ml-4 text-slate-500">Generating recommendations...</p></div>`;
+      try {
+        const response = await fetch("{% url 'ai_find_phone' %}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
+          body: JSON.stringify({ prompt: prompt }),
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Something went wrong on the server.");
+        }
+        const resultData = await response.json();
+        renderPhoneFinderResults(resultData);
+      } catch (error) {
+        console.error("Error:", error);
+        aiResultContainer.innerHTML = `<div class="p-8 text-center"><p class="text-red-600"><strong>Error:</strong> ${error.message}</p></div>`;
+      } finally {
+        aiBtnText.textContent = "Ask Gemini";
+        aiSubmitBtn.disabled = false;
+      }
+    };
+
+    const renderPhoneFinderResults = (resultData) => {
+
+      if (resultData.name && resultData.tagline && resultData.specs) {
+        const icons = ["maximize", "cpu", "camera", "battery-charging"];
+        let specsHTML = resultData.specs.map((spec, index) => {
+          const icon = icons[index] || "chevrons-right";
+          return `<span class="flex items-center text-sm spec-icon-group text-slate-600"><i data-feather="${icon}" class="mr-3 h-5 w-5 text-blue-500"></i>${spec}</span>`;
+        }).join('');
+
+        aiResultContainer.innerHTML = `
+                <div class="p-1">
+                    <p class="text-sm font-semibold text-slate-800 mb-4">Based on your request, here is our top recommendation:</p>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 animate-item-in">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">${resultData.name}</h3>
+                            </div>
+                            <a href="/specs/${encodeURIComponent(resultData.name)}/" class="text-xs bg-blue-100 text-blue-700 font-semibold rounded-full px-3 py-1 hover:bg-blue-200 transition-colors shrink-0 ml-2">View Specs</a>
+                        </div>
+                        <p class="text-slate-500 text-sm mt-3 mb-5">${resultData.tagline}</p>
+                        <div class="space-y-3">${specsHTML}</div>
+                    </div>
+                </div>`;
+      } else {
+        aiResultContainer.innerHTML = '<div class="p-8 text-center"><p class="text-slate-500">Sorry, we couldn\'t find any matching phones for your request. Please try a different query.</p></div>';
+      }
+      feather.replace();
+    };
+
+    window.handleSuggestedPrompt = (promptText) => {
+      aiPromptTextarea.value = promptText;
+      aiSubmitBtn.click();
+    }
+
+    const handleTechChat = async (prompt) => {
+      aiBtnText.textContent = "Sending...";
+      aiSubmitBtn.disabled = true;
+      aiPromptTextarea.value = "";
+      aiPromptTextarea.style.height = 'auto';
+
+      chatHistory.push({ role: 'user', content: prompt });
+      renderChatHistory();
+
+      const typingIndicator = document.createElement('div');
+      typingIndicator.id = 'ai-typing-indicator';
+      typingIndicator.classList.add('animate-item-in');
+      typingIndicator.innerHTML = `
+                <div class="flex items-start gap-4 mt-6">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M12 3L12 3L12 3C13.6569 3 15 4.34315 15 6L15 6L15 6C15 7.65685 13.6569 9 12 9L12 9L12 9C10.3431 9 9 7.65685 9 6L9 6L9 6C9 4.34315 10.3431 3 12 3zM21 12L21 12L21 12C21 13.6569 19.6569 15 18 15L18 15L18 15C16.3431 15 15 13.6569 15 12L15 12L15 12C15 10.3431 16.3431 9 18 9L18 9L18 9C19.6569 9 21 10.3431 21 12zM6 15L6 15L6 15C7.65685 15 9 16.3431 9 18L9 18L9 18C9 19.6569 7.65685 21 6 21L6 21L6 21C4.34315 21 3 19.6569 3 18L3 18L3 18C3 16.3431 4.34315 15 6 15z"></path></svg>
+                    </div>
+                    <div class="flex-1 bg-slate-100 p-4 rounded-xl rounded-tl-none flex items-center">
+                        <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                        <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s] mx-1"></div>
+                        <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+                    </div>
+                </div>`;
+      aiResultContainer.appendChild(typingIndicator);
+      aiResultContainer.scrollTop = aiResultContainer.scrollHeight;
+
+      try {
+        const response = await fetch("{% url 'ai_tech_chat' %}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
+          body: JSON.stringify({ prompt: prompt }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Server error.");
+        }
+
+        const resultData = await response.json();
+        chatHistory.push({ role: 'ai', content: resultData.response });
+        renderChatHistory();
+
+      } catch (error) {
+        console.error("Chat Error:", error);
+        const indicator = document.getElementById('ai-typing-indicator');
+        if (indicator) indicator.remove();
+        aiResultContainer.innerHTML += `<div class="text-center text-red-600 my-4 p-4 bg-red-50 rounded-lg"><strong>Error:</strong> ${error.message}</div>`;
+      } finally {
+        aiBtnText.textContent = "Send";
+        aiSubmitBtn.disabled = false;
+        aiPromptTextarea.focus();
+      }
+    };
+
+    const renderChatHistory = () => {
+      const typingIndicator = document.getElementById('ai-typing-indicator');
+      if (typingIndicator) typingIndicator.remove();
+
+      aiResultContainer.innerHTML = chatHistory.map((message, index) => {
+        const isLastMessage = index === chatHistory.length - 1;
+        const animationClass = isLastMessage ? 'animate-item-in' : '';
+
+        if (message.role === 'user') {
+          return `
+                      <div class="flex justify-end items-start gap-4 mt-6 ${animationClass}">
+                          <div class="flex-1 max-w-xl bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none shadow-md">
+                              <p class="whitespace-pre-wrap">${message.content}</p>
+                          </div>
+                          <div class="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center shrink-0">
+                              <span class="text-sm font-bold text-white">{% if user.is_authenticated %}{{ user.username.0|upper }}{% else %}G{% endif %}</span>
+                          </div>
+                      </div>
+                      `;
+        } else { // 'ai' role
+          let suggestionsHTML = '';
+          if (message.suggestions) {
+            suggestionsHTML = '<div class="mt-4 flex flex-wrap gap-2">' + message.suggestions.map(s =>
+              `<button onclick="handleSuggestedPrompt('${String(s).replace(/'/g, "\\'")}')" class="text-sm bg-white border border-slate-200 text-blue-700 font-semibold px-4 py-2 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all shadow-sm">${s}</button>`
+            ).join('') + '</div>';
+          }
+
+          return `
+                      <div class="flex items-start gap-4 mt-6 ${animationClass}">
+                           <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M12 3L12 3L12 3C13.6569 3 15 4.34315 15 6L15 6L15 6C15 7.65685 13.6569 9 12 9L12 9L12 9C10.3431 9 9 7.65685 9 6L9 6L9 6C9 4.34315 10.3431 3 12 3zM21 12L21 12L21 12C21 13.6569 19.6569 15 18 15L18 15L18 15C16.3431 15 15 13.6569 15 12L15 12L15 12C15 10.3431 16.3431 9 18 9L18 9L18 9C19.6569 9 21 10.3431 21 12zM6 15L6 15L6 15C7.65685 15 9 16.3431 9 18L9 18L9 18C9 19.6569 7.65685 21 6 21L6 21L6 21C4.34315 21 3 19.6569 3 18L3 18L3 18C3 16.3431 4.34315 15 6 15z"></path></svg>
+                          </div>
+                          <div class="flex-1 max-w-xl bg-white p-5 rounded-2xl rounded-tl-none relative group border border-slate-200 shadow-md">
+                              <div class="prose max-w-none">${marked.parse(message.content)}</div>
+                              ${suggestionsHTML}
+                              <button onclick="copyToClipboard(this, \`${encodeURIComponent(message.content)}\`)" class="absolute top-2 right-2 p-1.5 rounded-md bg-slate-200 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i data-feather="copy" class="w-4 h-4"></i>
+                              </button>
+                          </div>
+                      </div>
+                      `;
+        }
+      }).join('');
+
+      feather.replace();
+      aiResultContainer.scrollTop = aiResultContainer.scrollHeight;
+    };
+
+    window.copyToClipboard = (button, encodedText) => {
+      const textToCopy = decodeURIComponent(encodedText);
+      const tempTextarea = document.createElement('textarea');
+      tempTextarea.value = textToCopy;
+      document.body.appendChild(tempTextarea);
+      tempTextarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempTextarea);
+
+      button.innerHTML = '<i data-feather="check" class="w-4 h-4 text-green-600"></i>';
+      feather.replace();
+      setTimeout(() => {
+        button.innerHTML = '<i data-feather="copy" class="w-4 h-4"></i>';
+        feather.replace();
+      }, 2000);
+    }
+  }
+
+  const newsGrid = document.getElementById("tech-news-grid");
+  const refreshNewsBtn = document.getElementById("refresh-news-btn");
+  const newsLoadingSpinner = document.getElementById("news-loading-spinner");
+
+  const fetchTechNews = async () => {
+    if (!newsGrid || !refreshNewsBtn || !newsLoadingSpinner) {
+      console.warn("News elements not found, skipping news fetch.");
+      return;
+    }
+
+    newsLoadingSpinner.classList.remove("hidden");
+    const oldNews = newsGrid.querySelectorAll(".bg-white, .col-span-3");
+    oldNews.forEach(n => n.remove());
+
+    refreshNewsBtn.disabled = true;
+    refreshNewsBtn.classList.add("opacity-50", "cursor-not-allowed");
+
+    let newsHtml = "";
+
+    try {
+      const response = await fetch("{% url 'api_get_tech_news' %}", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch news.");
+      }
+
+      const data = await response.json();
+
+      if (data.articles && data.articles.length > 0) {
+        data.articles.forEach((article, index) => {
+          newsHtml += `
+                <div
+                  class="bg-white rounded-2xl shadow-md overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300"
+                  style="animation: item-in 0.5s ease-out forwards; animation-delay: ${index * 120}ms; opacity: 0;"
+                  data-tilt
+                >
+                  <div class="h-56 overflow-hidden">
+                    <img
+                      src="${article.image_url}"
+                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      alt="${article.title}"
+                      onerror="this.onerror=null;this.src='https://placehold.co/600x400/e0f2fe/0284c7?text=News+Image';"
+                    />
+                  </div>
+                  <div class="p-6 flex flex-col" style="min-height: 220px;">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2" title="${article.title}">
+                      ${article.title}
+                    </h3>
+                    <p class="text-slate-600 text-sm mb-4 flex-grow">
+                      ${article.description}
+                    </p>
+                    <a
+                      href="${article.article_url}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-semibold text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center group"
+                    >
+                      Read More
+                      <i data-feather="arrow-right" class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                  </div>
+                </div>
+              `;
+        });
+        newsLoadingSpinner.classList.add("hidden");
+        newsGrid.insertAdjacentHTML('beforeend', newsHtml);
+        applyTiltEffect(document.querySelectorAll("#tech-news-grid [data-tilt]"));
+      } else {
+        throw new Error("No articles found.");
+      }
+
+    } catch (error) {
+      console.error("Error fetching tech news:", error);
+      newsLoadingSpinner.classList.add("hidden");
+      newsGrid.insertAdjacentHTML('beforeend', `
+            <div class="col-span-3 text-center p-8 bg-red-50 text-red-700 rounded-lg">
+              <p><strong>Oops!</strong> Could not load tech news.</p>
+              <p class="text-sm">${error.message}</p>
+            </div>
+          `);
+    } finally {
+      refreshNewsBtn.disabled = false;
+      refreshNewsBtn.classList.remove("opacity-50", "cursor-not-allowed");
+      feather.replace();
+    }
+  };
+
+  if (refreshNewsBtn) {
+    refreshNewsBtn.addEventListener("click", fetchTechNews);
+  }
+  fetchTechNews();
+
+</script>
+{% endblock %}

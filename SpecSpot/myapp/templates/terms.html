@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Terms and Conditions - SpecSpot{% endblock %}
+
+{% block head_styles %}
+  <style>
+    .reveal-on-scroll { opacity: 0; transform: translateY(30px) scale(0.98); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal-from-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal-from-right { opacity: 0; transform: translateX(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal-on-scroll.is-visible,
+    .reveal-from-left.is-visible,
+    .reveal-from-right.is-visible { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section
+    class="text-center px-6 pt-16 pb-20 md:pt-24 md:pb-16 bg-slate-50/70"
+  >
+    <div class="max-w-3xl mx-auto">
+      <p
+        class="text-sm font-semibold text-indigo-600 tracking-widest uppercase mb-4 reveal-from-left delay-1"
+      >
+        LEGAL FRAMEWORK
+      </p>
+      <h1
+        class="text-5xl md:text-7xl font-black text-slate-900 mb-4 reveal-on-scroll delay-2"
+        style="text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)"
+      >
+        Terms and Conditions
+      </h1>
+      <p class="text-slate-500 reveal-from-right delay-1">
+        Last Updated: September 25, 2025
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 md:py-24">
+    <div class="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <div class="prose prose-lg max-w-none text-slate-600 space-y-6">
+        <div class="reveal-from-left">
+          <p>
+            Welcome to SpecSpot. These Terms and Conditions ("Terms") govern
+            your use of the SpecSpot website (the "Service") operated by us.
+            Please read these Terms carefully before using our Service.
+          </p>
+        </div>
+
+        <div class="reveal-from-right">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            1. Acceptance of Terms
+          </h2>
+          <p>
+            By accessing or using the Service, you agree to be bound by
+            these Terms. If you disagree with any part of the terms, then
+            you may not access the Service.
+          </p>
+        </div>
+
+        <div class="reveal-from-left">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            2. Content and Accuracy Disclaimer
+          </h2>
+          <p>
+            SpecSpot provides detailed mobile phone specifications,
+            features, and price information for informational purposes only.
+            We strive for the highest level of accuracy, but we cannot
+            guarantee that all information on the site is 100% correct,
+            complete, or current. Mobile phone manufacturers frequently
+            change specifications and pricing without notice.
+          </p>
+          <p>
+            Therefore, we shall not be held responsible for any errors,
+            omissions, or inaccuracies in the information provided. It is
+            your responsibility to verify any information with the
+            manufacturer or retailer before making a purchasing decision.
+          </p>
+        </div>
+
+        <div class="reveal-from-right">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            3. AI-Powered Phone Finder
+          </h2>
+          <p>
+            Our AI Phone Finder, powered by Gemini, provides recommendations
+            based on the prompts you provide. These suggestions are
+            generated algorithmically and are intended for informational
+            purposes. They do not constitute a guarantee of a device's
+            suitability for your specific needs. Your use of this feature is
+            at your own risk.
+          </p>
+        </div>
+
+        <div class="reveal-from-left">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            4. Intellectual Property
+          </h2>
+          <p>
+            The Service and its original content, features, and
+            functionality are and will remain the exclusive property of
+            SpecSpot. The SpecSpot name, logo, and all related names, logos,
+            product and service names, designs, and slogans are trademarks
+            of SpecSpot. You must not use such marks without our prior
+            written permission.
+          </p>
+        </div>
+
+        <div class="reveal-from-right">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            5. User Conduct and Prohibited Uses
+          </h2>
+          <p>
+            You may use our Service only for lawful purposes. You agree not
+            to use the Service:
+          </p>
+          <ul class="list-disc list-inside space-y-2">
+            <li>
+              In any way that violates any applicable national or
+              international law or regulation.
+            </li>
+            <li>
+              To engage in any data scraping, data mining, data harvesting,
+              or any other similar activity in relation to this website.
+            </li>
+            <li>
+              To transmit, or procure the sending of, any advertising or
+              promotional material, including any "junk mail," "chain
+              letter," "spam," or any other similar solicitation.
+            </li>
+          </ul>
+        </div>
+
+        <div class="reveal-from-left">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            6. Links To Other Web Sites
+          </h2>
+          <p>
+            Our Service may contain links to third-party web sites or
+            services that are not owned or controlled by SpecSpot. We have
+            no control over, and assume no responsibility for, the content,
+            privacy policies, or practices of any third-party web sites or
+            services.
+          </p>
+        </div>
+
+        <div class="reveal-from-right">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            7. Limitation of Liability
+          </h2>
+          <p>
+            In no event shall SpecSpot, nor its directors, employees,
+            partners, agents, suppliers, or affiliates, be liable for any
+            indirect, incidental, special, consequential or punitive
+            damages, including without limitation, loss of profits, data,
+            use, goodwill, or other intangible losses, resulting from your
+            access to or use of or inability to access or use the Service.
+          </p>
+        </div>
+
+        <div class="reveal-from-left">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            8. Governing Law
+          </h2>
+          <p>
+            These Terms shall be governed and construed in accordance with
+            the laws of India, with exclusive jurisdiction in the courts of
+            Surat, Gujarat, without regard to its conflict of law
+            provisions.
+          </p>
+        </div>
+
+        <div class="reveal-from-right">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            9. Changes to Terms
+          </h2>
+          <p>
+            We reserve the right, at our sole discretion, to modify or
+            replace these Terms at any time. We will provide notice of any
+            changes by posting the new Terms on this page.
+          </p>
+        </div>
+
+        <div class="reveal-from-left">
+          <h2 class="text-2xl font-bold text-slate-800 pt-8">
+            10. Contact Us
+          </h2>
+          <p>
+            If you have any questions about these Terms, please contact us
+            at:
+            <a
+              href="mailto:legal@specspot.com"
+              class="text-indigo-600 hover:underline"
+              >legal@specspot.com</a
+            >.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    const scrollObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document
+      .querySelectorAll(
+        ".reveal-on-scroll, .reveal-from-left, .reveal-from-right"
+      )
+      .forEach((el) => {
+        scrollObserver.observe(el);
+      });
+  </script>
+{% endblock %}

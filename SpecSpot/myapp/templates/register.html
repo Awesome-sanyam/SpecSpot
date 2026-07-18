@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpecSpot - Create an Account</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      :root {
+        --dark-bg: #f9fafb;
+        --primary-glow-color: #22d3ee;
+        --secondary-color: #2563eb;
+        --primary-glow: rgba(34, 211, 238, 0.5);
+        --secondary-glow: rgba(37, 99, 235, 0.5);
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --card-bg: rgba(255, 255, 255, 0.7);
+        --border-color: rgba(0, 0, 0, 0.1);
+        --error-color: #ef4444;
+        --success-color: #10b981;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -5;
+      }
+      .gradient-bg {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -3;
+        overflow: hidden;
+        filter: blur(120px);
+      }
+      .gradient-bg .aurora {
+        position: absolute;
+        border-radius: 50%;
+      }
+      .aurora-1 {
+        width: 700px;
+        height: 700px;
+        background-color: var(--primary-glow);
+        animation: moveAurora1 25s infinite alternate linear;
+      }
+      .aurora-2 {
+        width: 600px;
+        height: 600px;
+        background-color: var(--secondary-glow);
+        animation: moveAurora2 30s infinite alternate linear;
+      }
+      @keyframes moveAurora1 {
+        0% {
+          transform: translate(5vw, 15vh);
+        }
+        100% {
+          transform: translate(65vw, 75vh);
+        }
+      }
+      @keyframes moveAurora2 {
+        0% {
+          transform: translate(75vw, 5vh);
+        }
+        100% {
+          transform: translate(15vw, 65vh);
+        }
+      }
+      .auth-container {
+        width: 100%;
+        max-width: 450px;
+        padding: 2rem;
+        position: relative;
+      }
+      .auth-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 2.5rem;
+        backdrop-filter: blur(25px);
+        width: 100%;
+        border-radius: 1.25rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .auth-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          400px circle at var(--mouse-x) var(--mouse-y),
+          rgba(37, 99, 235, 0.15),
+          transparent 80%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease-out;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .auth-card:hover::before {
+        opacity: 1;
+      }
+      .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .form-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+      }
+      .form-header p {
+        color: var(--text-secondary);
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-5px);
+        }
+        40%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .shake {
+        animation: shake 0.5s ease-in-out;
+      }
+      .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .input-wrapper {
+        position: relative;
+      }
+      .input-icon {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: color 0.3s ease;
+        z-index: 2;
+      }
+      .input-field {
+        width: 100%;
+        background-color: rgba(249, 250, 251, 0.8);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 0.85rem 3rem;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+      }
+      .input-group label {
+        position: absolute;
+        top: 0.85rem;
+        left: 3rem;
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: all 0.2s ease-out;
+      }
+      .input-field:focus {
+        outline: none;
+        border-color: var(--primary-glow-color);
+        background-color: #fff;
+      }
+      .input-field:focus ~ .input-icon {
+        color: var(--primary-glow-color);
+      }
+      .input-field:focus + label,
+      .input-field:not(:placeholder-shown) + label {
+        top: -0.65rem;
+        left: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+        background: #f9fafb;
+        padding: 0 5px;
+        border-radius: 4px;
+      }
+      .input-field.invalid {
+        border-color: var(--error-color) !important;
+      }
+      .error-message {
+        color: var(--error-color);
+        font-size: 0.75rem;
+        padding-left: 0.2rem;
+        min-height: 20px;
+        text-align: left;
+        padding-top: 4px;
+      }
+      #password-criteria {
+        list-style: none;
+        padding: 0.5rem 0 0 0.2rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+      }
+      #password-criteria.visible {
+        max-height: 150px;
+      }
+      #password-criteria li {
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.3s ease;
+      }
+      #password-criteria li.valid {
+        color: var(--success-color);
+      }
+      #password-criteria li svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2.5;
+        stroke: currentColor;
+        fill: none;
+      }
+      .password-toggle-btn {
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-secondary);
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        z-index: 3;
+      }
+      .password-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+      .password-toggle-btn .icon-eye-off {
+        display: none;
+      }
+      .submit-button {
+        width: 100%;
+        background-image: linear-gradient(
+          90deg,
+          var(--primary-glow-color),
+          var(--secondary-color)
+        );
+        color: white;
+        border: none;
+        padding: 0.9rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50px;
+      }
+      .submit-button:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 25px rgba(34, 211, 238, 0.4);
+      }
+      .submit-button .button-text,
+      .submit-button .spinner,
+      .submit-button .icon-success {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        position: absolute;
+      }
+      .submit-button .spinner,
+      .submit-button .icon-success {
+        opacity: 0;
+        transform: scale(0.5);
+        pointer-events: none;
+      }
+      .submit-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .submit-button.loading .button-text {
+        opacity: 0;
+      }
+      .submit-button.loading .spinner {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .submit-button.success {
+        background-image: linear-gradient(90deg, var(--success-color), #10a372);
+      }
+      .submit-button.success .button-text,
+      .submit-button.success .spinner {
+        opacity: 0;
+      }
+      .submit-button.success .icon-success {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .form-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+      .logo-home-link {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        text-decoration: none;
+        z-index: 10;
+        background-image: linear-gradient(
+          90deg,
+          var(--primary-glow-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: text-shadow 0.3s ease, transform 0.3s ease;
+      }
+      .logo-home-link:hover {
+        text-shadow: 0 0 10px var(--primary-glow);
+        transform: scale(1.05);
+      }
+      #message {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-weight: 500;
+        min-height: 24px;
+        position: absolute;
+        bottom: 0.5rem;
+        left: 2.5rem;
+        right: 2.5rem;
+      }
+      #message.error {
+        color: var(--error-color);
+      }
+      #message.success {
+        color: var(--success-color);
+      }
+      .view-switch-link {
+        color: var(--secondary-color);
+        font-weight: 500;
+        text-decoration: none;
+      }
+      .view-switch-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <div class="gradient-bg">
+      <div class="aurora aurora-1"></div>
+      <div class="aurora aurora-2"></div>
+    </div>
+
+    <a href="{% url 'start' %}" class="logo-home-link">SpecSpot</a>
+
+    <div class="auth-container" id="auth-container">
+      <div class="auth-card" id="auth-card">
+        <div class="form-header">
+          <h1>Create Account</h1>
+          <p>Get started with SpecSpot for free</p>
+        </div>
+
+        <form id="register-form">
+          <!-- ★ FIX 1: Add the Django CSRF token tag here -->
+          {% csrf_token %}
+
+          <div class="input-group">
+            <div class="input-wrapper">
+              <svg
+                class="input-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <input
+                type="text"
+                id="register-username"
+                class="input-field"
+                placeholder=" "
+                required
+                aria-invalid="false"
+              />
+              <label for="register-username">Username</label>
+            </div>
+            <div id="username-error" class="error-message"></div>
+          </div>
+          <div class="input-group">
+            <div class="input-wrapper">
+              <svg
+                class="input-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              <input
+                type="email"
+                id="register-email"
+                class="input-field"
+                placeholder=" "
+                required
+              />
+              <label for="register-email">Email Address</label>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-wrapper">
+              <svg
+                class="input-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <input
+                type="password"
+                id="register-password"
+                class="input-field"
+                placeholder=" "
+                required
+                aria-invalid="false"
+              />
+              <label for="register-password">Create Password</label>
+              <button
+                type="button"
+                class="password-toggle-btn"
+                aria-label="Toggle password visibility"
+              >
+                <svg
+                  class="icon-eye"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg
+                  class="icon-eye-off"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                  <path
+                    d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                  />
+                  <path
+                    d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                  />
+                  <line x1="2" x2="22" y1="2" y2="22" />
+                </svg>
+              </button>
+            </div>
+            <ul id="password-criteria">
+              <li id="pw-length">
+                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>At
+                least 8 characters
+              </li>
+              <li id="pw-uppercase">
+                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>One
+                uppercase letter
+              </li>
+              <li id="pw-lowercase">
+                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>One
+                lowercase letter
+              </li>
+              <li id="pw-number">
+                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>One
+                number
+              </li>
+              <li id="pw-special">
+                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>One
+                special character (@$!%*?&)
+              </li>
+            </ul>
+          </div>
+          <div class="input-group">
+            <div class="input-wrapper">
+              <svg
+                class="input-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <input
+                type="password"
+                id="register-confirm-password"
+                class="input-field"
+                placeholder=" "
+                required
+                aria-invalid="false"
+              />
+              <label for="register-confirm-password">Confirm Password</label>
+              <button
+                type="button"
+                class="password-toggle-btn"
+                aria-label="Toggle password visibility"
+              >
+                <svg
+                  class="icon-eye"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg
+                  class="icon-eye-off"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                  <path
+                    d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                  />
+                  <path
+                    d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                  />
+                  <line x1="2" x2="22" y1="2" y2="22" />
+                </svg>
+              </button>
+            </div>
+            <div id="confirm-password-error" class="error-message"></div>
+          </div>
+          <button
+            type="submit"
+            id="register-submit-button"
+            class="submit-button"
+            disabled
+          >
+            <span class="button-text">Create Account</span>
+            <div class="spinner"></div>
+            <svg
+              class="icon-success"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </button>
+          <div class="form-footer">
+            <span>Already have an account?</span>
+            <a href="{% url 'login' %}" class="view-switch-link">Login</a>
+          </div>
+        </form>
+        <div id="message" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+      const authCard = document.getElementById("auth-card");
+      const messageEl = document.getElementById("message");
+      
+      // ★ FIX 2: Get the CSRF token value from the input field
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const button = e.currentTarget.querySelector(".submit-button");
+          if (button.disabled) return;
+          setFormState(button, "loading");
+
+          const username = document.getElementById("register-username").value;
+          const email = document.getElementById("register-email").value;
+          const password = document.getElementById("register-password").value;
+
+          try {
+            const response = await fetch("{% url 'register_api' %}", {
+              method: "POST",
+              headers: { 
+                "Content-Type": "application/json",
+                // ★ FIX 2: Add the token to the request headers
+                "X-CSRFToken": csrfToken 
+              },
+              body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+              setFormState(button, "success");
+              showMessage(data.message, "success");
+              setTimeout(() => {
+                window.location.href = "{% url 'login' %}";
+              }, 1500);
+            } else {
+              throw new Error(data.error || "Registration failed.");
+            }
+          } catch (error) {
+            showMessage(error.message, "error");
+            authCard.classList.add("shake");
+            setTimeout(() => authCard.classList.remove("shake"), 500);
+            setFormState(button, "idle");
+          }
+        });
+
+      function setFormState(button, state) {
+        button.classList.remove("loading", "success");
+        button.disabled = state === "loading" || state === "success";
+        if (state !== "idle") button.classList.add(state);
+      }
+
+      function showMessage(text, type = "info") {
+        messageEl.textContent = text;
+        messageEl.className = type;
+        setTimeout(() => {
+          messageEl.textContent = "";
+          messageEl.className = "";
+        }, 5000);
+      }
+
+      const usernameInput = document.getElementById("register-username");
+      const passwordInput = document.getElementById("register-password");
+      const confirmPasswordInput = document.getElementById(
+        "register-confirm-password"
+      );
+      const registerSubmitBtn = document.getElementById(
+        "register-submit-button"
+      );
+      const passwordCriteriaList = document.getElementById("password-criteria");
+
+      const USERNAME_REGEX = /^[a-zA-Z0-9_]{4,16}$/;
+      
+      let validationState = {
+        username: false,
+        password: {
+          "pw-length": false,
+          "pw-uppercase": false,
+          "pw-lowercase": false,
+          "pw-number": false,
+          "pw-special": false,
+        },
+        confirmPassword: false,
+      };
+
+      const checkCriterion = (id, valid) => {
+        document.getElementById(id).classList.toggle("valid", valid);
+        validationState.password[id] = valid;
+      };
+
+      function validatePassword() {
+        const pw = passwordInput.value;
+        checkCriterion("pw-length", pw.length >= 8);
+        checkCriterion("pw-uppercase", /[A-Z]/.test(pw));
+        checkCriterion("pw-lowercase", /[a-z]/.test(pw));
+        checkCriterion("pw-number", /\d/.test(pw));
+        checkCriterion("pw-special", /[@$!%*?&]/.test(pw));
+      }
+
+      function checkFormValidity() {
+        const isPasswordValid = Object.values(validationState.password).every(
+          Boolean
+        );
+        registerSubmitBtn.disabled = !(
+          validationState.username &&
+          isPasswordValid &&
+          validationState.confirmPassword
+        );
+      }
+
+      function showValidationResult(input, errorEl, msg, isValid) {
+        document.getElementById(errorEl).textContent = msg;
+        input.classList.toggle("invalid", !isValid);
+        input.setAttribute("aria-invalid", String(!isValid));
+      }
+
+      usernameInput.addEventListener("input", () => {
+        validationState.username = USERNAME_REGEX.test(usernameInput.value);
+        showValidationResult(
+          usernameInput,
+          "username-error",
+          validationState.username
+            ? ""
+            : "4-16 chars; letters, numbers, underscores.",
+          validationState.username
+        );
+        checkFormValidity();
+      });
+
+      passwordInput.addEventListener("focus", () =>
+        passwordCriteriaList.classList.add("visible")
+      );
+      passwordInput.addEventListener("input", () => {
+        validatePassword();
+        validateConfirmPassword();
+      });
+      confirmPasswordInput.addEventListener("input", validateConfirmPassword);
+
+      function validateConfirmPassword() {
+        const passwordsMatch =
+          passwordInput.value === confirmPasswordInput.value &&
+          confirmPasswordInput.value.length > 0;
+        validationState.confirmPassword = passwordsMatch;
+        showValidationResult(
+          confirmPasswordInput,
+          "confirm-password-error",
+          passwordsMatch ? "" : "Passwords do not match.",
+          passwordsMatch
+        );
+        checkFormValidity();
+      }
+
+      document.querySelectorAll(".password-toggle-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const wrapper = btn.closest(".input-wrapper"); 
+          const input = wrapper.querySelector(".input-field");
+          const iconEye = btn.querySelector(".icon-eye");
+          const iconEyeOff = btn.querySelector(".icon-eye-off");
+          const isHidden = input.type === "password";
+          input.type = isHidden ? "text" : "password";
+          iconEye.style.display = isHidden ? "none" : "block";
+          iconEyeOff.style.display = isHidden ? "block" : "none";
+        });
+      });
+
+      authCard.addEventListener("mousemove", (e) => {
+        const rect = authCard.getBoundingClientRect();
+        authCard.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        authCard.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      });
+
+      particlesJS("particles-js", {
+        particles: {
+          number: { value: 40, density: { enable: true, value_area: 800 } },
+          color: { value: "#6B7280" },
+          opacity: { value: 0.4, random: true },
+          size: { value: 2, random: true },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#9CA3AF",
+            opacity: 0.2,
+            width: 1,
+          },
+          move: {
+            enable: true,
+            speed: 0.8,
+            direction: "none",
+            random: true,
+            out_mode: "out",
+          },
+        },
+        interactivity: {
+          events: { onhover: { enable: true, mode: "grab" } },
+          modes: { grab: { distance: 140, line_linked: { opacity: 0.5 } } },
+        },
+      });
+    </script>
+  </body>
+</html>

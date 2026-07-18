@@ -1,0 +1,1383 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpecSpot - Access Your Account</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      :root {
+        --dark-bg: #f9fafb;
+        --primary-glow-color: #22d3ee;
+        --secondary-color: #2563eb;
+        --primary-glow: rgba(34, 211, 238, 0.5);
+        --secondary-glow: rgba(37, 99, 235, 0.5);
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --card-bg: rgba(255, 255, 255, 0.7);
+        --border-color: rgba(0, 0, 0, 0.1);
+        --error-color: #ef4444;
+        --success-color: #10b981;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -5;
+      }
+      .gradient-bg {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -3;
+        overflow: hidden;
+        filter: blur(120px);
+      }
+      .gradient-bg .aurora {
+        position: absolute;
+        border-radius: 50%;
+      }
+      .aurora-1 {
+        width: 700px;
+        height: 700px;
+        background-color: var(--primary-glow);
+        animation: moveAurora1 25s infinite alternate linear;
+      }
+      .aurora-2 {
+        width: 600px;
+        height: 600px;
+        background-color: var(--secondary-glow);
+        animation: moveAurora2 30s infinite alternate linear;
+      }
+      @keyframes moveAurora1 {
+        0% {
+          transform: translate(5vw, 15vh);
+        }
+        100% {
+          transform: translate(65vw, 75vh);
+        }
+      }
+      @keyframes moveAurora2 {
+        0% {
+          transform: translate(75vw, 5vh);
+        }
+        100% {
+          transform: translate(15vw, 65vh);
+        }
+      }
+      .auth-container {
+        width: 100%;
+        max-width: 450px;
+        padding: 2rem;
+        position: relative;
+      }
+      .auth-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 2.5rem;
+        backdrop-filter: blur(25px);
+        width: 100%;
+        border-radius: 1.25rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .auth-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          400px circle at var(--mouse-x) var(--mouse-y),
+          rgba(37, 99, 235, 0.15),
+          transparent 80%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease-out;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .auth-card:hover::before {
+        opacity: 1;
+      }
+      .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .form-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+      }
+      .form-header p {
+        color: var(--text-secondary);
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-5px);
+        }
+        40%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .shake {
+        animation: shake 0.5s ease-in-out;
+      }
+      .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .input-icon {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: color 0.3s ease;
+        z-index: 2;
+      }
+      .input-field {
+        width: 100%;
+        background-color: rgba(249, 250, 251, 0.8);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 0.85rem 3rem;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+      }
+      .input-group label {
+        position: absolute;
+        top: 0.85rem;
+        left: 3rem;
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: all 0.2s ease-out;
+      }
+      .input-field:focus {
+        outline: none;
+        border-color: var(--primary-glow-color);
+        background-color: #fff;
+      }
+      .input-field:focus ~ .input-icon {
+        color: var(--primary-glow-color);
+      }
+      .input-field:focus + label,
+      .input-field:not(:placeholder-shown) + label {
+        top: -0.65rem;
+        left: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+        background: #f9fafb;
+        padding: 0 5px;
+        border-radius: 4px;
+      }
+      .password-toggle-btn {
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-secondary);
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        z-index: 3;
+      }
+      .password-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+      .password-toggle-btn .icon-eye-off {
+        display: none;
+      }
+      .form-options {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+      }
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+      }
+      .remember-me input {
+        display: none;
+      }
+      .remember-me .checkbox {
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid var(--border-color);
+        border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s ease;
+      }
+      .remember-me .checkbox svg {
+        stroke: white;
+        stroke-width: 3;
+        width: 12px;
+        height: 12px;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.2s ease;
+      }
+      .remember-me input:checked + .checkbox {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+      .remember-me input:checked + .checkbox svg {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .submit-button {
+        width: 100%;
+        background-image: linear-gradient(
+          90deg,
+          var(--primary-glow-color),
+          var(--secondary-color)
+        );
+        color: white;
+        border: none;
+        padding: 0.9rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50px;
+      }
+      .submit-button:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 25px rgba(34, 211, 238, 0.4);
+      }
+      .submit-button .button-text,
+      .submit-button .spinner,
+      .submit-button .icon-success {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        position: absolute;
+      }
+      .submit-button .spinner,
+      .submit-button .icon-success {
+        opacity: 0;
+        transform: scale(0.5);
+        pointer-events: none;
+      }
+      .submit-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .submit-button.loading .button-text {
+        opacity: 0;
+      }
+      .submit-button.loading .spinner {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .submit-button.success {
+        background-image: linear-gradient(90deg, var(--success-color), #10a372);
+      }
+      .submit-button.success .button-text,
+      .submit-button.success .spinner {
+        opacity: 0;
+      }
+      .submit-button.success .icon-success {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .social-divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        margin: 1.5rem 0;
+      }
+      .social-divider::before,
+      .social-divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .social-divider:not(:empty)::before {
+        margin-right: 0.5em;
+      }
+      .social-divider:not(:empty):after {
+        margin-left: 0.5em;
+      }
+      .social-button {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color);
+        background: rgba(0, 0, 0, 0.02);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .social-button:hover {
+        background: rgba(0, 0, 0, 0.06);
+        color: var(--text-primary);
+        border-color: var(--primary-glow-color);
+        transform: translateY(-2px);
+      }
+      .form-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+      .logo-home-link {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        text-decoration: none;
+        z-index: 10;
+        background-image: linear-gradient(
+          90deg,
+          var(--primary-glow-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: text-shadow 0.3s ease, transform 0.3s ease;
+      }
+      .logo-home-link:hover {
+        text-shadow: 0 0 10px var(--primary-glow);
+        transform: scale(1.05);
+      }
+      #message {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-weight: 500;
+        min-height: 24px;
+        position: absolute;
+        bottom: 0.5rem;
+        left: 2.5rem;
+        right: 2.5rem;
+      }
+      #message.error {
+        color: var(--error-color);
+      }
+      #message.success {
+        color: var(--success-color);
+      }
+      .view-switch-link {
+        color: var(--secondary-color);
+        font-weight: 500;
+        text-decoration: none;
+      }
+      .view-switch-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <div class="gradient-bg">
+      <div class="aurora aurora-1"></div>
+      <div class="aurora aurora-2"></div>
+    </div>
+
+    <a href="{% url 'start' %}" class="logo-home-link">SpecSpot</a>
+
+    <div class="auth-container" id="auth-container">
+      <div class="auth-card" id="auth-card">
+        <div class="form-header">
+          <h1>Welcome Back</h1>
+          <p>Login to continue to SpecSpot</p>
+        </div>
+
+        <form id="login-form">
+          <div class="input-group">
+            <svg
+              class="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <input
+              type="text"
+              id="login-username"
+              class="input-field"
+              placeholder=" "
+              required
+            />
+            <label for="login-username">Username</label>
+          </div>
+          <div class="input-group">
+            <svg
+              class="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <input
+              type="password"
+              id="login-password"
+              class="input-field"
+              placeholder=" "
+              required
+            />
+            <label for="login-password">Password</label>
+            <button
+              type="button"
+              class="password-toggle-btn"
+              aria-label="Toggle password visibility"
+            >
+              <svg
+                class="icon-eye"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <svg
+                class="icon-eye-off"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                <path
+                  d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                />
+                <path
+                  d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                />
+                <line x1="2" x2="22" y1="2" y2="22" />
+              </svg>
+            </button>
+          </div>
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" id="remember-me" />
+              <span class="checkbox"
+                ><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg
+              ></span>
+              Remember me
+            </label>
+          </div>
+          <button type="submit" class="submit-button">
+            <span class="button-text">Login</span>
+            <div class="spinner"></div>
+            <svg
+              class="icon-success"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </button>
+          <div class="form-footer">
+            <span>Don't have an account?</span>
+            <a href="{% url 'register' %}" class="view-switch-link">Register</a>
+          </div>
+        </form>
+        <div id="message" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+      // --- DOM Elements ---
+      const authCard = document.getElementById("auth-card");
+      const messageEl = document.getElementById("message");
+
+      // --- Form Submission Handler ---
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const button = e.currentTarget.querySelector(".submit-button");
+          setFormState(button, "loading");
+
+          const username = document.getElementById("login-username").value;
+          const password = document.getElementById("login-password").value;
+
+          try {
+            const response = await fetch("{% url 'login_api' %}", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username: username, password: password }),
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+              setFormState(button, "success");
+              setTimeout(() => {
+                window.location.href = data.redirect_url;
+              }, 500);
+            } else {
+              throw new Error(data.error || "Login failed. Please try again.");
+            }
+          } catch (error) {
+            showMessage(error.message, "error");
+            authCard.classList.add("shake");
+            setTimeout(() => authCard.classList.remove("shake"), 500);
+            setFormState(button, "idle");
+          }
+        });
+
+      // --- UI Utility Functions ---
+      function setFormState(button, state) {
+        button.classList.remove("loading", "success");
+        button.disabled = state === "loading" || state === "success";
+        if (state !== "idle") button.classList.add(state);
+      }
+
+      function showMessage(text, type = "info") {
+        messageEl.textContent = text;
+        messageEl.className = type;
+        setTimeout(() => {
+          messageEl.textContent = "";
+          messageEl.className = "";
+        }, 5000);
+      }
+
+      // --- General UX Enhancements ---
+      document.querySelectorAll(".password-toggle-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const input = btn.closest('.input-group').querySelector('.input-field');          const iconEye = btn.querySelector(".icon-eye");
+          const iconEyeOff = btn.querySelector(".icon-eye-off");
+          if (input.type === "password") {
+            input.type = "text";
+            iconEye.style.display = "none";
+            iconEyeOff.style.display = "block";
+          } else {
+            input.type = "password";
+            iconEye.style.display = "block";
+            iconEyeOff.style.display = "none";
+          }
+        });
+      });
+
+      authCard.addEventListener("mousemove", (e) => {
+        const rect = authCard.getBoundingClientRect();
+        authCard.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        authCard.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      });
+
+      particlesJS("particles-js", {
+        particles: {
+          number: { value: 40, density: { enable: true, value_area: 800 } },
+          color: { value: "#6B7280" },
+          opacity: { value: 0.4, random: true },
+          size: { value: 2, random: true },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#9CA3AF",
+            opacity: 0.2,
+            width: 1,
+          },
+          move: {
+            enable: true,
+            speed: 0.8,
+            direction: "none",
+            random: true,
+            out_mode: "out",
+          },
+        },
+        interactivity: {
+          events: { onhover: { enable: true, mode: "grab" } },
+          modes: { grab: { distance: 140, line_linked: { opacity: 0.5 } } },
+        },
+      });
+    </script>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpecSpot - Access Your Account</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      :root {
+        --dark-bg: #f9fafb;
+        --primary-glow-color: #22d3ee;
+        --secondary-color: #2563eb;
+        --primary-glow: rgba(34, 211, 238, 0.5);
+        --secondary-glow: rgba(37, 99, 235, 0.5);
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --card-bg: rgba(255, 255, 255, 0.7);
+        --border-color: rgba(0, 0, 0, 0.1);
+        --error-color: #ef4444;
+        --success-color: #10b981;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -5;
+      }
+      .gradient-bg {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -3;
+        overflow: hidden;
+        filter: blur(120px);
+      }
+      .gradient-bg .aurora {
+        position: absolute;
+        border-radius: 50%;
+      }
+      .aurora-1 {
+        width: 700px;
+        height: 700px;
+        background-color: var(--primary-glow);
+        animation: moveAurora1 25s infinite alternate linear;
+      }
+      .aurora-2 {
+        width: 600px;
+        height: 600px;
+        background-color: var(--secondary-glow);
+        animation: moveAurora2 30s infinite alternate linear;
+      }
+      @keyframes moveAurora1 {
+        0% {
+          transform: translate(5vw, 15vh);
+        }
+        100% {
+          transform: translate(65vw, 75vh);
+        }
+      }
+      @keyframes moveAurora2 {
+        0% {
+          transform: translate(75vw, 5vh);
+        }
+        100% {
+          transform: translate(15vw, 65vh);
+        }
+      }
+      .auth-container {
+        width: 100%;
+        max-width: 450px;
+        padding: 2rem;
+        position: relative;
+      }
+      .auth-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 2.5rem;
+        backdrop-filter: blur(25px);
+        width: 100%;
+        border-radius: 1.25rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .auth-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          400px circle at var(--mouse-x) var(--mouse-y),
+          rgba(37, 99, 235, 0.15),
+          transparent 80%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease-out;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .auth-card:hover::before {
+        opacity: 1;
+      }
+      .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .form-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+      }
+      .form-header p {
+        color: var(--text-secondary);
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-5px);
+        }
+        40%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .shake {
+        animation: shake 0.5s ease-in-out;
+      }
+      .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .input-icon {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: color 0.3s ease;
+        z-index: 2;
+      }
+      .input-field {
+        width: 100%;
+        background-color: rgba(249, 250, 251, 0.8);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 0.85rem 3rem;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+      }
+      .input-group label {
+        position: absolute;
+        top: 0.85rem;
+        left: 3rem;
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: all 0.2s ease-out;
+      }
+      .input-field:focus {
+        outline: none;
+        border-color: var(--primary-glow-color);
+        background-color: #fff;
+      }
+      .input-field:focus ~ .input-icon {
+        color: var(--primary-glow-color);
+      }
+      .input-field:focus + label,
+      .input-field:not(:placeholder-shown) + label {
+        top: -0.65rem;
+        left: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+        background: #f9fafb;
+        padding: 0 5px;
+        border-radius: 4px;
+      }
+      .password-toggle-btn {
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-secondary);
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        z-index: 3;
+      }
+      .password-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+      .password-toggle-btn .icon-eye-off {
+        display: none;
+      }
+      .form-options {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+      }
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+      }
+      .remember-me input {
+        display: none;
+      }
+      .remember-me .checkbox {
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid var(--border-color);
+        border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s ease;
+      }
+      .remember-me .checkbox svg {
+        stroke: white;
+        stroke-width: 3;
+        width: 12px;
+        height: 12px;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.2s ease;
+      }
+      .remember-me input:checked + .checkbox {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+      .remember-me input:checked + .checkbox svg {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .submit-button {
+        width: 100%;
+        background-image: linear-gradient(
+          90deg,
+          var(--primary-glow-color),
+          var(--secondary-color)
+        );
+        color: white;
+        border: none;
+        padding: 0.9rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50px;
+      }
+      .submit-button:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 25px rgba(34, 211, 238, 0.4);
+      }
+      .submit-button .button-text,
+      .submit-button .spinner,
+      .submit-button .icon-success {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        position: absolute;
+      }
+      .submit-button .spinner,
+      .submit-button .icon-success {
+        opacity: 0;
+        transform: scale(0.5);
+        pointer-events: none;
+      }
+      .submit-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .submit-button.loading .button-text {
+        opacity: 0;
+      }
+      .submit-button.loading .spinner {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .submit-button.success {
+        background-image: linear-gradient(90deg, var(--success-color), #10a372);
+      }
+      .submit-button.success .button-text,
+      .submit-button.success .spinner {
+        opacity: 0;
+      }
+      .submit-button.success .icon-success {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .social-divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        margin: 1.5rem 0;
+      }
+      .social-divider::before,
+      .social-divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .social-divider:not(:empty)::before {
+        margin-right: 0.5em;
+      }
+      .social-divider:not(:empty):after {
+        margin-left: 0.5em;
+      }
+      .social-button {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color);
+        background: rgba(0, 0, 0, 0.02);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .social-button:hover {
+        background: rgba(0, 0, 0, 0.06);
+        color: var(--text-primary);
+        border-color: var(--primary-glow-color);
+        transform: translateY(-2px);
+      }
+      .form-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+      .logo-home-link {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        text-decoration: none;
+        z-index: 10;
+        background-image: linear-gradient(
+          90deg,
+          var(--primary-glow-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: text-shadow 0.3s ease, transform 0.3s ease;
+      }
+      .logo-home-link:hover {
+        text-shadow: 0 0 10px var(--primary-glow);
+        transform: scale(1.05);
+      }
+      #message {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-weight: 500;
+        min-height: 24px;
+        position: absolute;
+        bottom: 0.5rem;
+        left: 2.5rem;
+        right: 2.5rem;
+      }
+      #message.error {
+        color: var(--error-color);
+      }
+      #message.success {
+        color: var(--success-color);
+      }
+      .view-switch-link {
+        color: var(--secondary-color);
+        font-weight: 500;
+        text-decoration: none;
+      }
+      .view-switch-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <div class="gradient-bg">
+      <div class="aurora aurora-1"></div>
+      <div class="aurora aurora-2"></div>
+    </div>
+
+    <a href="{% url 'start' %}" class="logo-home-link">SpecSpot</a>
+
+    <div class="auth-container" id="auth-container">
+      <div class="auth-card" id="auth-card">
+        <div class="form-header">
+          <h1>Welcome Back</h1>
+          <p>Login to continue to SpecSpot</p>
+        </div>
+
+        <form id="login-form">
+          <div class="input-group">
+            <svg
+              class="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <input
+              type="text"
+              id="login-username"
+              class="input-field"
+              placeholder=" "
+              required
+            />
+            <label for="login-username">Username</label>
+          </div>
+          <div class="input-group">
+            <svg
+              class="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <input
+              type="password"
+              id="login-password"
+              class="input-field"
+              placeholder=" "
+              required
+            />
+            <label for="login-password">Password</label>
+            <button
+              type="button"
+              class="password-toggle-btn"
+              aria-label="Toggle password visibility"
+            >
+              <svg
+                class="icon-eye"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <svg
+                class="icon-eye-off"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                <path
+                  d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                />
+                <path
+                  d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                />
+                <line x1="2" x2="22" y1="2" y2="22" />
+              </svg>
+            </button>
+          </div>
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" id="remember-me" />
+              <span class="checkbox"
+                ><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg
+              ></span>
+              Remember me
+            </label>
+          </div>
+          <button type="submit" class="submit-button">
+            <span class="button-text">Login</span>
+            <div class="spinner"></div>
+            <svg
+              class="icon-success"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </button>
+          <div class="form-footer">
+            <span>Don't have an account?</span>
+            <a href="{% url 'register' %}" class="view-switch-link">Register</a>
+          </div>
+        </form>
+        <div id="message" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+      // --- DOM Elements ---
+      const authCard = document.getElementById("auth-card");
+      const messageEl = document.getElementById("message");
+
+      // --- Form Submission Handler ---
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const button = e.currentTarget.querySelector(".submit-button");
+          setFormState(button, "loading");
+
+          const username = document.getElementById("login-username").value;
+          const password = document.getElementById("login-password").value;
+
+          try {
+            const response = await fetch("{% url 'login_api' %}", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username: username, password: password }),
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+              setFormState(button, "success");
+              setTimeout(() => {
+                window.location.href = data.redirect_url;
+              }, 500);
+            } else {
+              throw new Error(data.error || "Login failed. Please try again.");
+            }
+          } catch (error) {
+            showMessage(error.message, "error");
+            authCard.classList.add("shake");
+            setTimeout(() => authCard.classList.remove("shake"), 500);
+            setFormState(button, "idle");
+          }
+        });
+
+      // --- UI Utility Functions ---
+      function setFormState(button, state) {
+        button.classList.remove("loading", "success");
+        button.disabled = state === "loading" || state === "success";
+        if (state !== "idle") button.classList.add(state);
+      }
+
+      function showMessage(text, type = "info") {
+        messageEl.textContent = text;
+        messageEl.className = type;
+        setTimeout(() => {
+          messageEl.textContent = "";
+          messageEl.className = "";
+        }, 5000);
+      }
+
+      // --- General UX Enhancements ---
+      document.querySelectorAll(".password-toggle-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const input = btn.closest('.input-group').querySelector('.input-field');          const iconEye = btn.querySelector(".icon-eye");
+          const iconEyeOff = btn.querySelector(".icon-eye-off");
+          if (input.type === "password") {
+            input.type = "text";
+            iconEye.style.display = "none";
+            iconEyeOff.style.display = "block";
+          } else {
+            input.type = "password";
+            iconEye.style.display = "block";
+            iconEyeOff.style.display = "none";
+          }
+        });
+      });
+
+      authCard.addEventListener("mousemove", (e) => {
+        const rect = authCard.getBoundingClientRect();
+        authCard.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        authCard.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      });
+
+      particlesJS("particles-js", {
+        particles: {
+          number: { value: 40, density: { enable: true, value_area: 800 } },
+          color: { value: "#6B7280" },
+          opacity: { value: 0.4, random: true },
+          size: { value: 2, random: true },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#9CA3AF",
+            opacity: 0.2,
+            width: 1,
+          },
+          move: {
+            enable: true,
+            speed: 0.8,
+            direction: "none",
+            random: true,
+            out_mode: "out",
+          },
+        },
+        interactivity: {
+          events: { onhover: { enable: true, mode: "grab" } },
+          modes: { grab: { distance: 140, line_linked: { opacity: 0.5 } } },
+        },
+      });
+    </script>
+  </body>
+</html>

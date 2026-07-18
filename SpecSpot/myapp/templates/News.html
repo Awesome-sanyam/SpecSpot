@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SpecSpot - Tech News Feed{% endblock %}
+
+{% block head_styles %}
+  <style>
+    body {
+      background: linear-gradient(-45deg, #eef2ff, #f0f9ff, #e0e7ff, #dbeafe);
+    }
+    .article-block-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .article-block-hover:hover {
+      transform: translateY(-4px); 
+      box-shadow: 0 15px 40px rgba(79, 70, 229, 0.2); 
+      border-color: #4f46e5; 
+    }
+    .news-image {
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .news-container-full {
+        padding: 2.5rem;
+        background-color: #f0f4ff; 
+        border: 2px solid #c7d2fe;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    main {
+      min-height: 100vh;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="px-6 sm:px-8 lg:px-10 py-16">
+    <div class="text-center mb-12">
+      <h1
+        class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-4"
+        style="text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05)"
+      >
+        <i data-feather="monitor" class="w-12 h-12 inline mr-3 text-indigo-600"></i>
+        The Tech Report
+      </h1>
+      <p class="max-w-4xl mx-auto text-slate-700 text-lg md:text-xl border-t border-b border-indigo-200 py-3 bg-indigo-50/50 rounded-lg">
+        Sourced by **SpecSpot AI** 🤖: **Top 5** and trending headlines in mobile, gadgets, and AI.
+      </p>
+      <p id="last-updated" class="mt-4 text-sm text-slate-500 font-medium"></p>
+    </div>
+
+    <div
+      id="news-container"
+      class="grid grid-cols-1 gap-10 news-container-full"
+    >
+      <div
+        id="loading-spinner"
+        class="col-span-full flex flex-col items-center justify-center p-16 text-center"
+      >
+        <svg
+          class="animate-spin h-14 w-14 text-indigo-600"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <p class="mt-6 text-slate-700 text-lg font-semibold">
+          Preparing the feed... fetching the top 5 tech news now!
+        </p>
+      </div>
+      <p
+        id="error-message"
+        class="col-span-full text-center text-red-600 font-bold text-xl hidden p-10 bg-red-50 rounded-lg border border-red-300"
+      >
+        <i data-feather="alert-triangle" class="w-6 h-6 inline mr-2"></i>
+        Could not load news. Please check your API Key and try again later.
+      </p>
+    </div>
+    
+    <div class="flex justify-center mt-12">
+        <button
+            id="load-more-btn"
+            class="hidden px-8 py-3 bg-indigo-600 text-white text-lg font-semibold rounded-full shadow-lg shadow-indigo-500/50 hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            onclick="loadNews()"
+        >
+            <i data-feather="chevron-down" class="w-6 h-6 inline mr-2"></i>
+            Show More News
+        </button>
+    </div>
+
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    let currentOffset = 0;
+    const articlesPerLoad = 5; 
+    
+    const newsContainer = document.getElementById("news-container");
+    const loadingSpinner = document.getElementById("loading-spinner");
+    const errorMessage = document.getElementById("error-message");
+    const lastUpdatedElement = document.getElementById("last-updated");
+    const loadMoreBtn = document.getElementById("load-more-btn");
+
+    const createNewsArticle = (article) => {
+      const articleBlock = document.createElement("a");
+      articleBlock.href = article.link; 
+      articleBlock.target = "_blank";
+      articleBlock.rel = "noopener noreferrer";
+      articleBlock.className =
+        "block bg-white p-6 md:p-8 rounded-xl shadow-2xl border-l-8 border-indigo-600 article-block-hover cursor-pointer";
+
+      articleBlock.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
+              
+              <div class="md:col-span-1 overflow-hidden rounded-lg shadow-xl">
+                  <img 
+                      src="${article.image_url}" 
+                      alt="${article.title}" 
+                      class="news-image w-full transition-transform duration-500 hover:scale-[1.05] filter grayscale-0 hover:grayscale-0"
+                      loading="lazy"
+                      onerror="this.onerror=null;this.src='https://placehold.co/600x400/e0f2fe/0284c7?text=News+Image';"
+                  />
+              </div>
+
+              <div class="md:col-span-2">
+                  <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+                      <span class="text-sm font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
+                          ${article.source}
+                      </span>
+                      <span class="text-sm text-slate-500 flex items-center">
+                          <i data-feather="calendar" class="w-4 h-4 mr-1"></i> 
+                          Today's News
+                      </span>
+                  </div>
+
+                  <h3 class="text-3xl font-extrabold text-slate-900 mt-2 mb-4 leading-tight hover:text-indigo-700 transition-colors">
+                      ${article.title}
+                  </h3>
+                  <p class="text-slate-700 text-lg mb-6 leading-relaxed border-l-4 border-slate-200 pl-4 italic">
+                      ${article.summary}
+                  </p>
+
+                  <span class="inline-flex items-center text-indigo-600 font-bold hover:text-indigo-800 transition-colors text-base group">
+                      Read Full Story 
+                      <i data-feather="arrow-right" class="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+                  </span>
+              </div>
+          </div>
+      `;
+      return articleBlock;
+    };
+
+    const loadNews = async () => {
+      loadMoreBtn.disabled = true;
+
+      if (currentOffset === 0) {
+          newsContainer.innerHTML = "";
+          newsContainer.appendChild(loadingSpinner);
+      } else {
+          loadMoreBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 inline text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Loading More...';
+      }
+      loadingSpinner.classList.remove("hidden");
+      errorMessage.classList.add("hidden");
+
+      try {
+        const url = `{% url 'api_get_tech_news' %}?limit=${articlesPerLoad}&offset=${currentOffset}`;
+        const response = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken 
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch news from API.");
+        }
+
+        const data = await response.json();
+
+        loadingSpinner.classList.add("hidden");
+        
+        if (currentOffset === 0) {
+            newsContainer.innerHTML = ""; 
+            const now = new Date();
+            lastUpdatedElement.textContent = `Last updated: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} on ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+        } else {
+            loadMoreBtn.innerHTML = '<i data-feather="chevron-down" class="w-6 h-6 inline mr-2"></i>Show More News';
+        }
+
+        if (data.articles && Array.isArray(data.articles) && data.articles.length > 0) {
+          data.articles.forEach((article) => {
+            const articleBlock = createNewsArticle(article);
+            newsContainer.appendChild(articleBlock);
+          });
+          
+          currentOffset += data.articles.length; 
+
+          if (data.articles.length === articlesPerLoad) { 
+              loadMoreBtn.classList.remove("hidden");
+              loadMoreBtn.disabled = false;
+          } else {
+              loadMoreBtn.classList.add("hidden");
+          }
+          feather.replace();
+        } else if (currentOffset === 0) {
+          throw new Error("AI returned no articles or an invalid structure.");
+        } else {
+          loadMoreBtn.classList.add("hidden");
+        }
+
+      } catch (error) {
+        console.error("Error loading tech news:", error);
+        loadingSpinner.classList.add("hidden");
+        if (currentOffset === 0) {
+          newsContainer.innerHTML = "";
+          errorMessage.textContent =
+            error.message ||
+            "Could not load news. Check your API Key configuration or try again later.";
+          errorMessage.classList.remove("hidden");
+          newsContainer.appendChild(errorMessage);
+        }
+        loadMoreBtn.classList.add("hidden");
+        loadMoreBtn.disabled = false;
+        if (currentOffset !== 0) {
+           loadMoreBtn.innerHTML = '<i data-feather="alert-triangle" class="w-6 h-6 inline mr-2"></i>Error Loading';
+        }
+        feather.replace();
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", loadNews);
+  </script>
+{% endblock %}
